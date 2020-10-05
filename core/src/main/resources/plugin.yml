@@ -1,0 +1,7 @@
+name: Bedwars
+main: ro.marius.bedwars.BedWarsPlugin
+author: Marius
+description: ${project.parent.description}
+version: '${project.parent.version}'
+api-version: 1.13
+softdepend: [Citizens, SlimeWorldManager, FastAsyncWorldEdit, PlaceholderAPI]

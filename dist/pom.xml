@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>bedwars-plugin</artifactId>
+        <groupId>ro.marius</groupId>
+        <version>1.5.8</version>
+    </parent>
+
+    <packaging>jar</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>dist</artifactId>
+    <version>${project.parent.version}</version>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>abstraction</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>utils</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_8_R3</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_9_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_9_R2</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_10_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_11_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_12_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_13_R2</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_14_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_15_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_16_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_16_R2</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+
+        <directory>../target</directory>
+        <finalName>Bedwars-Maven</finalName>
+
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>../core/src/main/resources</directory>
+                <includes>
+                    <include>plugin.yml</include>
+                    <include>team_selector.yml</include>
+                    <include>upgrades.yml</include>
+                    <include>default.yml</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>create-fat-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+
+                            <artifactSet>
+                                <includes>
+                                    <include>ro.marius:*</include>
+                                </includes>
+                            </artifactSet>
+
+                            <transformers>
+                                <!-- add Main-Class to manifest file -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>ro.marius.bedwars.BedWarsPlugin</mainClass>
+                                </transformer>
+                            </transformers>
+                            <finalName>Bedwars-${project.parent.version}</finalName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+
+
+    </build>
+
+
+</project>
