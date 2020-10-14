@@ -22,56 +22,59 @@ public class VersionManager {
         this.setupHologramNMS();
     }
 
-    public void setupHologramNMS() {
+    private void setupHologramNMS() {
 
         if (this.versionName == null) {
             return;
         }
 
-        this.hologram = this.getIHologram();
+        this.hologram = this.getNewHologramWrapper();
     }
 
-    public NMSHologramWrapper getIHologram() {
+    public NMSHologramWrapper getNewHologramWrapper() {
 
-        NMSHologramWrapper hologram = null;
+        NMSHologramWrapper hologramWrapper = null;
 
         switch (this.versionName) {
             case "v1_16_R2":
-                hologram = new H_1_16_R2();
+                hologramWrapper = new H_1_16_R2();
+                break;
+            case "v1_16_R1":
+                hologramWrapper = new H_1_16_R1();
                 break;
             case "v1_15_R1":
-                hologram = new H_1_15_R1();
+                hologramWrapper = new H_1_15_R1();
                 break;
             case "v1_14_R1":
-                hologram = new H_1_14_R1();
+                hologramWrapper = new H_1_14_R1();
                 break;
             case "v1_13_R2":
-                hologram = new H_1_13_R2();
+                hologramWrapper = new H_1_13_R2();
                 break;
             case "v1_12_R1":
-                hologram = new H_1_12_R1();
+                hologramWrapper = new H_1_12_R1();
                 break;
             case "v1_11_R1":
-                hologram = new H_1_11_R1();
+                hologramWrapper = new H_1_11_R1();
                 break;
             case "v1_10_R1":
-                hologram = new H_1_10_R1();
+                hologramWrapper = new H_1_10_R1();
                 break;
             case "v1_9_R2":
-                hologram = new H_1_9_R2();
+                hologramWrapper = new H_1_9_R2();
                 break;
             case "v1_9_R1":
-                hologram = new H_1_9_R1();
+                hologramWrapper = new H_1_9_R1();
                 break;
             case "v1_8_R3":
-                hologram = new H_1_8_R3();
+                hologramWrapper = new H_1_8_R3();
                 break;
         }
 
-        return hologram;
+        return hologramWrapper;
     }
 
-    public void setupVersionNMS() {
+    private void setupVersionNMS() {
 
         if (this.versionName == null) {
             return;
@@ -82,6 +85,10 @@ public class VersionManager {
             case "v1_16_R2":
                 this.serverVersion = ServerVersion.v1_16_R2;
                 this.versionWrapper = new v1_16_R2();
+                break;
+            case "v1_16_R1":
+                this.serverVersion = ServerVersion.v1_16_R1;
+                this.versionWrapper = new v1_16_R1();
                 break;
             case "v1_15_R1":
                 this.serverVersion = ServerVersion.v1_15_R1;

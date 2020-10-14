@@ -29,14 +29,8 @@ public class ClientSocket {
             this.output = new DataOutputStream(this.socket.getOutputStream());
             this.input = new DataInputStream(this.socket.getInputStream());
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        ClientSocket clientSocket = new ClientSocket("localhost", 6666);
-        clientSocket.startReading();
     }
 
     public void startReading() {

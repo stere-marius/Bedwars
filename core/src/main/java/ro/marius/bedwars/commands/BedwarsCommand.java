@@ -38,7 +38,8 @@ import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.manager.type.FAWEManager;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.match.MatchState;
-import ro.marius.bedwars.menu.extra.*;
+import ro.marius.bedwars.menu.extra.ArenaInventory;
+import ro.marius.bedwars.menu.extra.TeamSelectorInventory;
 import ro.marius.bedwars.playerdata.APlayerData;
 import ro.marius.bedwars.shopconfiguration.shopinventory.ShopInventory;
 import ro.marius.bedwars.team.Team;
@@ -203,42 +204,22 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("openPaginatedInventory".equalsIgnoreCase(args[0])) {
+        if ("getHolograms".equalsIgnoreCase(args[0])) {
 
-            Pagination<InventoryItem> inventoryItemPagination = new Pagination<InventoryItem>(6);
-            inventoryItemPagination.add(new InventoryItem(0, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
-            inventoryItemPagination.add(new InventoryItem(10, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
-            inventoryItemPagination.add(new InventoryItem(20, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
-            inventoryItemPagination.add(new InventoryItem(30, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
-            inventoryItemPagination.add(new InventoryItem(40, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
-            inventoryItemPagination.add(new InventoryItem(50, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 1").build()));
+            PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram(p);
+            int size = playerHologram.getPlayerHolograms().size();
+            p.sendMessage("Player hologram size " + size);
+            p.sendMessage("Player hologram location list " + playerHologram.getLocationHolograms().size());
+            p.sendMessage("Player hologram list " + playerHologram.getPlayerHolograms().values().size());
 
-            inventoryItemPagination.add(new InventoryItem(0, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
-            inventoryItemPagination.add(new InventoryItem(10, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
-            inventoryItemPagination.add(new InventoryItem(20, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
-            inventoryItemPagination.add(new InventoryItem(30, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
-            inventoryItemPagination.add(new InventoryItem(40, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
-            inventoryItemPagination.add(new InventoryItem(50, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 2").build()));
+            return;
+        }
 
-            inventoryItemPagination.add(new InventoryItem(0, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
-            inventoryItemPagination.add(new InventoryItem(10, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
-            inventoryItemPagination.add(new InventoryItem(20, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
-            inventoryItemPagination.add(new InventoryItem(30, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
-            inventoryItemPagination.add(new InventoryItem(40, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
-            inventoryItemPagination.add(new InventoryItem(50, new ItemBuilder(XMaterial.BLACK_STAINED_GLASS, 1).setDisplayName("Page 3").build()));
 
-            PaginatedInventory paginatedInventory = new PaginatedInventory(
-                    "&aPaginated Inventory",
-                    54,
-                    53,
-                    45,
-                    new ItemBuilder(XMaterial.FEATHER, 1).setDisplayName("&eNext page").build(),
-                    new ItemBuilder(XMaterial.ANVIL, 1).setDisplayName("&ePrevious page").build(),
-                    inventoryItemPagination
-            );
-
-            p.openInventory(paginatedInventory.getInventory());
-            p.sendMessage("The inventory has been opened");
+        if ("removeHologram".equalsIgnoreCase(args[0])) {
+            PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram().get(p);
+            playerHologram.removeHologram();
+            p.sendMessage("The holograms have been removed.");
 
             return;
         }
@@ -268,7 +249,7 @@ public class BedwarsCommand extends AbstractCommand {
         if ("arenasGUI".equalsIgnoreCase(args[0])) {
 
             if (args.length >= 2) {
-                p.openInventory(new ArenaInventory(args[1]).getInventory());
+                p.openInventory(new ArenaInventory().getInventory());
                 return;
             }
 

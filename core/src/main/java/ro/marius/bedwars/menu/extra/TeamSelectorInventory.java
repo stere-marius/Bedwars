@@ -24,7 +24,6 @@ public class TeamSelectorInventory extends ExtraInventory implements GameObserve
 
     private final AMatch match;
 
-
     private final TeamSelectorConfiguration teamSelectorConfiguration = new TeamSelectorConfiguration();
     private final ConfiguredGUIItem teamPicker = ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.Contents.TEAM_PICKER_ITEM", teamSelectorConfiguration.getConfig());
     private final Inventory inventory;

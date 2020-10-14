@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PlayerHologram {
 
-    private final Map<Integer, List<NMSHologramWrapper>> hm = new HashMap<>();
-    private Player player;
-    private boolean hasChangedWorld;
-    private List<Location> locationHolograms;
-    private List<String> statsHologramText;
+    private final Map<Integer, List<NMSHologramWrapper>> playerHolograms = new HashMap<>();
+    private final Player player;
+    private final List<Location> locationHolograms;
+    private final List<String> statsHologramText;
 
     public PlayerHologram(Player player, List<Location> locationHolograms, List<String> statsHologramText) {
         this.player = player;
@@ -51,53 +51,16 @@ public class PlayerHologram {
                     .replace("<totalWins>", wins + "").replace("<totalLosses>", losses + "");
 
 
-            NMSHologramWrapper hologram = ManagerHandler.getVersionManager().getIHologram();
+            NMSHologramWrapper hologram = ManagerHandler.getVersionManager().getNewHologramWrapper();
             hologram.spawn(loc, text);
             hologram.sendTo(this.player);
             holograms.add(hologram);
 
-            this.hm.put(this.hm.size(), holograms);
         }
+
+        this.playerHolograms.put(this.playerHolograms.size(), holograms);
     }
 
-    public void spawnAllStatsHologram() {
-
-        if (this.locationHolograms.isEmpty()) {
-            return;
-        }
-
-        APlayerData data = ManagerHandler.getGameManager().getData(this.player);
-        int totalKills = data.getTotalKills();
-        int totalBedsBroken = data.getTotalBedsBroken();
-        int totalFinalKills = data.getTotalFinalKills();
-        int totalDeaths = data.getTotalDeaths();
-        int totalBedsLost = data.getTotalBedsLost();
-        int totalGamesPlayed = data.getTotalGamesPlayed();
-        int wins = data.getTotalWins();
-        int losses = data.getTotalDefeats();
-
-        for (int i = 0; i < this.locationHolograms.size(); i++) {
-            List<NMSHologramWrapper> lines = new ArrayList<NMSHologramWrapper>();
-            for (int j = 0; j < this.statsHologramText.size(); j++) {
-                double distance = (double) j / 4;
-                Location loc = this.locationHolograms.get(i).clone().subtract(0, distance, 0);
-                String text = this.statsHologramText.get(j).replace("<totalKills>", totalKills + "")
-                        .replace("<totalBedsBroken>", totalBedsBroken + "")
-                        .replace("<totalFinalKills>", totalFinalKills + "").replace("<totalDeaths>", totalDeaths + "")
-                        .replace("<totalBedsLost>", totalBedsLost + "")
-                        .replace("<totalGamesPlayed>", totalGamesPlayed + "").replace("<totalWins>", wins + "")
-                        .replace("<totalLosses>", losses + "");
-
-                NMSHologramWrapper hologram = ManagerHandler.getVersionManager().getIHologram();
-                hologram.spawn(loc, text);
-                hologram.sendTo(this.player);
-                lines.add(hologram);
-
-            }
-            this.hm.put(i, lines);
-        }
-
-    }
 
     public void spawnWorldHolograms(World world) {
 
@@ -105,23 +68,15 @@ public class PlayerHologram {
             return;
         }
 
-        boolean isWorld = false;
+        List<Location> worldHolograms = this.locationHolograms
+                .stream()
+                .filter(location -> location.getWorld().getName().equals(world.getName()))
+                .collect(Collectors.toList());
 
-        for (Location loc : this.locationHolograms) {
-
-            if (!loc.getWorld().getName().equals(world.getName())) {
-                continue;
-            }
-
-            isWorld = true;
-
-        }
-
-        if (!isWorld) {
+        if (worldHolograms.isEmpty()) {
             return;
         }
 
-        List<Location> locations = new ArrayList<Location>();
         APlayerData data = ManagerHandler.getGameManager().getData(this.player);
         int totalKills = data.getTotalKills();
         int totalBedsBroken = data.getTotalBedsBroken();
@@ -132,24 +87,9 @@ public class PlayerHologram {
         int wins = data.getTotalWins();
         int losses = data.getTotalDefeats();
 
-        for (int i = 0; i < this.locationHolograms.size(); i++) {
 
-            Location loc = this.locationHolograms.get(i);
-
-            if (!loc.getWorld().getName().equals(world.getName())) {
-                continue;
-            }
-
-            locations.add(loc);
-
-        }
-
-        if (locations.isEmpty()) {
-            return;
-        }
-
-        for (int i = 0; i < locations.size(); i++) {
-            List<NMSHologramWrapper> lines = new ArrayList<NMSHologramWrapper>();
+        for (int i = 0; i < worldHolograms.size(); i++) {
+            List<NMSHologramWrapper> lines = new ArrayList<>();
             for (int j = 0; j < this.statsHologramText.size(); j++) {
                 double distance = (double) j / 4;
                 Location loc = this.locationHolograms.get(i).clone().subtract(0, distance, 0);
@@ -160,13 +100,13 @@ public class PlayerHologram {
                         .replace("<totalGamesPlayed>", totalGamesPlayed + "").replace("<totalWins>", wins + "")
                         .replace("<totalLosses>", losses + "");
 
-                NMSHologramWrapper hologram = ManagerHandler.getVersionManager().getIHologram();
+                NMSHologramWrapper hologram = ManagerHandler.getVersionManager().getNewHologramWrapper();
                 hologram.spawn(loc, text);
                 hologram.sendTo(this.player);
                 lines.add(hologram);
 
             }
-            this.hm.put(i, lines);
+            this.playerHolograms.put(i, lines);
         }
 
     }
@@ -187,8 +127,8 @@ public class PlayerHologram {
                 int wins = data.getTotalWins();
                 int losses = data.getTotalDefeats();
 
-                for (int i = 0; i < PlayerHologram.this.hm.size(); i++) {
-                    List<NMSHologramWrapper> holograms = PlayerHologram.this.hm.get(i);
+                for (int i = 0; i < PlayerHologram.this.playerHolograms.size(); i++) {
+                    List<NMSHologramWrapper> holograms = PlayerHologram.this.playerHolograms.get(i);
                     for (int j = 0; j < PlayerHologram.this.statsHologramText.size(); j++) {
                         NMSHologramWrapper hologram = holograms.get(j);
                         String text = PlayerHologram.this.statsHologramText.get(j).replace("<totalKills>", totalKills + "")
@@ -205,19 +145,22 @@ public class PlayerHologram {
                 }
 
             }
-        }.runTaskLater(BedWarsPlugin.getInstance(), 20 * 1);
+        }.runTaskLater(BedWarsPlugin.getInstance(), 20);
 
     }
 
     public void removeHologram() {
 
-        for (int i = 0; i < this.hm.size(); i++) {
-            List<NMSHologramWrapper> holograms = this.hm.get(i);
+        for (int i = 0; i < this.playerHolograms.size(); i++) {
+            List<NMSHologramWrapper> holograms = this.playerHolograms.get(i);
             for (NMSHologramWrapper hologram : holograms) {
                 hologram.remove(this.player);
             }
         }
+    }
 
+    public Map<Integer, List<NMSHologramWrapper>> getPlayerHolograms() {
+        return playerHolograms;
     }
 
     public Player getPlayer() {
@@ -231,14 +174,5 @@ public class PlayerHologram {
     public List<String> getStatsHologramText() {
         return this.statsHologramText;
     }
-
-    public boolean hasChangedWorld() {
-        return this.hasChangedWorld;
-    }
-
-    public void setHasChangedWorld(boolean hasChangedWorld) {
-        this.hasChangedWorld = hasChangedWorld;
-    }
-
 
 }
