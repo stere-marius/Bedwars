@@ -23,7 +23,7 @@ public class ConfiguredGUIItem {
         add("Lore");
         add("Glowing");
         add("Data");
-        add("Name");
+        add("DisplayName");
     }};
 
     public ConfiguredGUIItem(ItemBuilder itemBuilder, List<Integer> slotList, Map<String, Object> additionalProperties) {
@@ -41,7 +41,7 @@ public class ConfiguredGUIItem {
         List<String> lore = fileConfiguration.getStringList(path + ".Lore");
         int amount = fileConfiguration.getInt(path + ".Amount");
         boolean glowing = fileConfiguration.getBoolean(path + ".Glowing");
-        String displayName = fileConfiguration.getString(path + ".Name", "");
+        String displayName = fileConfiguration.getString(path + ".DisplayName", "");
         Material material = XMaterial.parseMaterial(materialName, data);
         ItemStack itemStack = XMaterial.parseItemStack(material, data, amount);
         Map<String, Object> additionalProperties = new HashMap<>();

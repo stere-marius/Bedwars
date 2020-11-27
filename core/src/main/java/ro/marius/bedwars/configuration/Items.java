@@ -22,7 +22,7 @@ public enum Items {
 
     GAME_LEAVE(true, XMaterial.RED_BED.parseMaterial().name(), 0, 8, "&aLeave from arena", ""),
     SPECTATOR_LEAVE(true, XMaterial.RED_BED.parseMaterial().name(), 0, 8, "&aLeave from arena", ""),
-    TEAM_SELECTOR(true, "COMPASS", 0, 0, "&aSelect a team", ""),
+    TEAM_SELECTOR(false, "COMPASS", 0, 0, "&aSelect a team", ""),
     //	KIT_SELECTOR(true, "REDSTONE_COMPARATOR", 1, 0, 0, "&eSelect a kit", ""),
     TELEPORTER(true, "COMPASS", 0, 0, "&aTeleport to a player", ""),
     SPECTATOR_SETTINGS(true, "REDSTONE_COMPARATOR", 0, 4, "&bSpectator settings&7(Right click)", ""),

@@ -1,13 +1,17 @@
 package ro.marius.bedwars.listeners.game.players;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import ro.marius.bedwars.configuration.Items;
+import ro.marius.bedwars.configuration.TeamSelectorConfiguration;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
+import ro.marius.bedwars.menu.extra.PaginatedInventory;
 import ro.marius.bedwars.menu.extra.TeamSelectorInventory;
 
 public class PlayerInteractItems implements Listener {
@@ -29,12 +33,14 @@ public class PlayerInteractItems implements Listener {
         if (handItem.isSimilar(Items.GAME_LEAVE.toItemStack())) {
             match.removePlayer(p);
             e.setCancelled(true);
+            return;
         }
 
-        if (handItem.isSimilar(Items.TEAM_SELECTOR.toItemStack())) {
+        if (handItem.isSimilar(Items.TEAM_SELECTOR.toItemStack()) && !(p.getOpenInventory().getTopInventory().getHolder() instanceof PaginatedInventory)) {
             p.openInventory(new TeamSelectorInventory(match).getInventory());
             e.setCancelled(true);
         }
+
 
     }
 

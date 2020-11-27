@@ -290,6 +290,7 @@ public class GameManager {
     public void loadGames() {
 
         StringBuilder builder = new StringBuilder(ChatColor.GREEN + "Loaded games: ");
+
         if (!this.gameFile.exists()) {
             return;
         }

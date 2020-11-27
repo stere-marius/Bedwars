@@ -15,6 +15,7 @@ import ro.marius.bedwars.utils.PlayerHologram;
 
 public class HologramListener implements Listener {
 
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
 
@@ -23,44 +24,32 @@ public class HologramListener implements Listener {
         if (hManager.getConfig() == null) {
             return;
         }
-        if (hManager.getConfig().getStringList("StatisticsHologram.Text").isEmpty()) {
+        if (hManager.getStatsHologramText().isEmpty()) {
             return;
         }
 
         Player p = e.getPlayer();
-        PlayerHologram playerHologram = new PlayerHologram(p, hManager.getLocationHolograms(),
-                hManager.getStatsHologramText());
 
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                playerHologram.spawnAllStatsHologram();
+                PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram(p);
+                playerHologram.removeHologram();
+                playerHologram.spawnWorldHolograms(p.getWorld());
                 playerHologram.updateHologram();
-
             }
         }.runTaskLater(BedWarsPlugin.getInstance(), 20);
-
-        hManager.getPlayerHologram().put(p, playerHologram);
 
     }
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
-
         Player player = e.getPlayer();
-        World world = e.getPlayer().getLocation().getWorld();
-        PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram().get(player);
-
-        if (playerHologram == null) {
-            HologramManager hManager = ManagerHandler.getHologramManager();
-            playerHologram = new PlayerHologram(player, hManager.getLocationHolograms(),
-                    hManager.getStatsHologramText());
-            hManager.getPlayerHologram().put(player, playerHologram);
-        }
-
+        World world = player.getLocation().getWorld();
+        PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram(player);
+        playerHologram.removeHologram();
         playerHologram.spawnWorldHolograms(world);
-
     }
 
     @EventHandler

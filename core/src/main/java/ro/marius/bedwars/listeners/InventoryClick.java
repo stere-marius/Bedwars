@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import ro.marius.bedwars.game.Game;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
@@ -218,6 +219,25 @@ public class InventoryClick implements Listener {
 
         ExtraInventory extraInventory = (ExtraInventory) e.getView().getTopInventory().getHolder();
         extraInventory.onClick(e);
+
+    }
+
+
+    @EventHandler
+    public void onCloseExtraInventory(InventoryCloseEvent e) {
+
+
+        if (e.getInventory().getHolder() == null) {
+            return;
+        }
+
+        if (!(e.getView().getTopInventory().getHolder() instanceof ExtraInventory)) {
+            return;
+        }
+
+
+        ExtraInventory extraInventory = (ExtraInventory) e.getView().getTopInventory().getHolder();
+        extraInventory.onClose(e);
 
     }
 

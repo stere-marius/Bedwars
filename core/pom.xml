@@ -72,6 +72,15 @@
 
         <dependency>
             <groupId>ro.marius</groupId>
+            <artifactId>v1_16_R1</artifactId>
+            <version>${project.parent.version}</version>
+            <optional>true</optional>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ro.marius</groupId>
             <artifactId>abstraction</artifactId>
             <version>${project.parent.version}</version>
             <scope>compile</scope>
@@ -134,6 +143,12 @@
         <dependency>
             <groupId>ro.marius</groupId>
             <artifactId>v1_9_R2</artifactId>
+            <version>1.5.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_16_R1</artifactId>
             <version>1.5.8</version>
             <scope>compile</scope>
         </dependency>

@@ -19,4 +19,12 @@ public class InventoryItem {
     public ItemStack getItemStack() {
         return itemStack;
     }
+
+    @Override
+    public String toString() {
+        return "InventoryItem{" +
+                "slot=" + slot +
+                ", itemStack=" + (itemStack.getItemMeta() == null ? "NULL-ITEM-META" : itemStack.getItemMeta().getDisplayName()) +
+                '}';
+    }
 }

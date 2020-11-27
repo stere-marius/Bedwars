@@ -43,7 +43,7 @@ public class HologramManager {
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerHologram hologram = new PlayerHologram(player, this.locationHolograms, this.statsHologramText);
-            hologram.spawnAllStatsHologram();
+            hologram.spawnWorldHolograms(player.getWorld());
             this.playerHologram.put(player, hologram);
         }
 
@@ -66,14 +66,12 @@ public class HologramManager {
                             "&fTotal Losses: &a<totalLosses>", "&fTotal Beds Broken: &a<totalBedsBroken>",
                             "&fTotal Beds Lost: &a<totalBedsLost>"));
         }
+
         this.saveConfig();
     }
 
     public void loadStatisticsHologramText() {
         if (!this.file.exists()) {
-            return;
-        }
-        if (this.config.getStringList("StatisticsHologram.Text") == null) {
             return;
         }
         if (this.config.getStringList("StatisticsHologram.Text").isEmpty()) {
@@ -124,6 +122,7 @@ public class HologramManager {
             e.printStackTrace();
         }
     }
+
 
     public Map<Player, PlayerHologram> getPlayerHologram() {
         return this.playerHologram;

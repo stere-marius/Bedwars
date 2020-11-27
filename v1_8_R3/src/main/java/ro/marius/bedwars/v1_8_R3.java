@@ -55,6 +55,14 @@ public class v1_8_R3 implements VersionWrapper {
     }
 
     @Override
+    public void setUnbreakable(ItemStack itemStack) {
+        net.minecraft.server.v1_8_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
+        NBTTagCompound compound = (nmsItem.hasTag()) ? nmsItem.getTag() : new NBTTagCompound();
+        compound.setBoolean("Unbreakable", true);
+        nmsItem.setTag(compound);
+    }
+
+    @Override
     public void sendTitle(Player p, Integer fadeIn, Integer stay, Integer fadeOut, String titlu, String subtitlu,
                           boolean send, boolean sendAgainTitle) {
         if (!send) {

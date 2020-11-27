@@ -1,67 +1,57 @@
 package ro.marius.bedwars.menu.extra;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import ro.marius.bedwars.configuration.ConfiguredGUIItem;
 import ro.marius.bedwars.configuration.Lang;
 import ro.marius.bedwars.configuration.TeamSelectorConfiguration;
 import ro.marius.bedwars.game.gameobserver.GameObserver;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
-import ro.marius.bedwars.menu.ExtraInventory;
 import ro.marius.bedwars.team.Team;
-import ro.marius.bedwars.utils.Utils;
 import ro.marius.bedwars.utils.itembuilder.ItemBuilder;
 
+import java.util.HashMap;
 import java.util.UUID;
 
-public class TeamSelectorInventory extends ExtraInventory implements GameObserver {
+public class TeamSelectorInventory extends PaginatedInventory implements GameObserver {
 
     private final AMatch match;
-
-
-    private final TeamSelectorConfiguration teamSelectorConfiguration = new TeamSelectorConfiguration();
-    private final ConfiguredGUIItem teamPicker = ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.Contents.TEAM_PICKER_ITEM", teamSelectorConfiguration.getConfig());
-    private final Inventory inventory;
+    public static final TeamSelectorConfiguration TEAM_SELECTOR_CONFIGURATION = new TeamSelectorConfiguration();
 
     public TeamSelectorInventory(AMatch match) {
+        super(TEAM_SELECTOR_CONFIGURATION.getConfig().getString("Menu.TeamSelector.InventoryName"),
+                TEAM_SELECTOR_CONFIGURATION.getConfig().getInt("Menu.TeamSelector.InventorySize"),
+                ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.NEXT_PAGE_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig()).getSlotList().get(0),
+                ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.PREVIOUS_PAGE_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig()).getSlotList().get(0),
+                ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.NEXT_PAGE_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig()).getItemBuilder().build(),
+                ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.PREVIOUS_PAGE_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig()).getItemBuilder().build(),
+                new Pagination<>(
+                        ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.Contents.TEAM_PICKER_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig()).getSlotList().size()
+                ),
+                new HashMap<>());
         this.match = match;
-        this.inventory = createInventory();
-        this.match.getGame().registerObserver(this);
+        this.setPaginatedInventoryItems(getPaginationGameMappedItem());
     }
 
-    @Override
-    public @NotNull Inventory getInventory() {
+    public Pagination<InventoryItem> getPaginationGameMappedItem() {
 
-        setInventoryItems();
-
-        return inventory;
-    }
-
-    public Inventory createInventory() {
-        String string = teamSelectorConfiguration.getConfig().getString("Menu.TeamSelector.InventoryName");
-        int size = teamSelectorConfiguration.getConfig().getInt("Menu.TeamSelector.InventorySize");
-        return Bukkit.createInventory(this, size, Utils.translate(string));
-    }
-
-    public void setInventoryItems() {
+        ConfiguredGUIItem teamPickerItem = ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.Contents.TEAM_PICKER_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig());
+        Pagination<InventoryItem> pagination = new Pagination<>(teamPickerItem.getSlotList().size());
 
         int currentTeamPickerSlot = 0;
-        boolean updateBasedOnTeamPlayers = (boolean) teamPicker.getAdditionalProperties().get("StackBasedOnTeamPlayers");
+        boolean updateBasedOnTeamPlayers = (boolean) teamPickerItem.getAdditionalProperties().get("StackBasedOnTeamPlayers");
 
         for (Team team : match.getTeams()) {
 
-            if (currentTeamPickerSlot >= teamPicker.getSlotList().size())
+            if (currentTeamPickerSlot >= teamPickerItem.getSlotList().size())
                 continue;
 
-            ItemBuilder itemBuilder = teamPicker.getItemBuilder().clone();
+            ItemBuilder itemBuilder = teamPickerItem.getItemBuilder().clone();
             itemBuilder.replaceItemStack(team.getTeamColor().getBuildMaterial());
-            itemBuilder.setNBTTag(ManagerHandler.getVersionManager().getVersionWrapper(),"TeamName", team.getName());
+            itemBuilder.setNBTTag(ManagerHandler.getVersionManager().getVersionWrapper(), "TeamName", team.getName());
 
             if (updateBasedOnTeamPlayers) {
                 itemBuilder.withAmount(team.getPlayers().isEmpty() ? 1 : team.getPlayers().size());
@@ -77,22 +67,27 @@ public class TeamSelectorInventory extends ExtraInventory implements GameObserve
                     .replaceInLore("<teamName>", team.getName())
                     .replaceInLore("<teamPlayersInLine>", team.getPlayersName());
 
-            inventory.setItem(teamPicker.getSlotList().get(currentTeamPickerSlot), itemBuilder.build());
-            currentTeamPickerSlot++;
+            pagination.add(new InventoryItem(teamPickerItem.getSlotList().get(currentTeamPickerSlot), itemBuilder.build()));
+            currentTeamPickerSlot = currentTeamPickerSlot + 1 >= teamPickerItem.getSlotList().size() ? 0 : ++currentTeamPickerSlot;
         }
 
+        return pagination;
     }
 
     @Override
     public void onClick(InventoryClickEvent e) {
-
         e.setCancelled(true);
 
         if (e.getCurrentItem() == null)
             return;
 
-        Player player = (Player) e.getWhoClicked();
         ItemStack itemStack = e.getCurrentItem();
+        Player player = (Player) e.getWhoClicked();
+        super.onClick(e);
+
+        if (!ManagerHandler.getVersionManager().getVersionWrapper().containsNBTTag(itemStack, "TeamName"))
+            return;
+
         String teamName = ManagerHandler.getVersionManager().getVersionWrapper().getNBTTag(itemStack, "TeamName");
         Team team = match.getTeam(teamName);
 
@@ -105,7 +100,6 @@ public class TeamSelectorInventory extends ExtraInventory implements GameObserve
         }
 
         moveToTeam(team, player);
-        setInventoryItems();
         e.setCancelled(true);
     }
 
@@ -122,9 +116,9 @@ public class TeamSelectorInventory extends ExtraInventory implements GameObserve
 
     @Override
     public void update() {
-        setInventoryItems();
+        TeamSelectorInventory.this.setPaginatedInventoryItems(getPaginationGameMappedItem());
+        TeamSelectorInventory.super.setPaginatedItems();
     }
-
 
     @Override
     public void onClose(InventoryCloseEvent e) {

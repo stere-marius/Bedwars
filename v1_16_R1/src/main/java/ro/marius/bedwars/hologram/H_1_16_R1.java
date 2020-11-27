@@ -1,9 +1,9 @@
 package ro.marius.bedwars.hologram;
 
-import net.minecraft.server.v1_16_R2.*;
+import net.minecraft.server.v1_16_R1.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import ro.marius.bedwars.NMSHologramWrapper;
 import ro.marius.bedwars.utils.Utils;
@@ -11,7 +11,7 @@ import ro.marius.bedwars.utils.Utils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class H_1_16_R2 implements NMSHologramWrapper {
+public class H_1_16_R1 implements NMSHologramWrapper {
 
     private EntityArmorStand armorStand;
     private String text;
