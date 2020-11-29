@@ -1,6 +1,5 @@
 package ro.marius.bedwars.menu.extra;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -31,15 +30,15 @@ public class ArenaInventory extends PaginatedInventory {
             .translate(GUIStructure.getConfig().getString("Menu.ArenaInventory.SearchingDisplay"));
     private static final String STARTING_DISPLAY = Utils
             .translate(GUIStructure.getConfig().getString("Menu.ArenaInventory.StartingDisplay"));
-    public static final int NEXT_PAGE_SLOT = GUIStructure.getConfig().getInt("Menu.ArenaInventory.NextPage.Slot");
-    public static final int PREVIOUS_PAGE_SLOT = GUIStructure.getConfig().getInt("Menu.ArenaInventory.PreviousPage.Slot");
-    public static final int INVENTORY_SIZE = GUIStructure.getInventorySize("Menu.ArenaInventory");
+    private static final int NEXT_PAGE_SLOT = GUIStructure.getConfig().getInt("Menu.ArenaInventory.NextPage.Slot");
+    private static final int PREVIOUS_PAGE_SLOT = GUIStructure.getConfig().getInt("Menu.ArenaInventory.PreviousPage.Slot");
+    private static final int INVENTORY_SIZE = GUIStructure.getInventorySize("Menu.ArenaInventory");
     private static final String MENU_NAME = GUIStructure.getConfig().getString("Menu.ArenaInventory.InventoryName");
-    public static final List<Integer> ARENA_ITEM_SLOTS = GUIStructure.getSlot("Menu.ArenaInventory.ArenaSlot");
+    private static final List<Integer> ARENA_ITEM_SLOTS = GUIStructure.getSlot("Menu.ArenaInventory.ArenaSlot");
     private static final ItemBuilder IN_WAITING = GUIStructure.readBuilder("Menu.ArenaInventory.WaitingArena");
     private static final ItemBuilder STARTING = GUIStructure.readBuilder("Menu.ArenaInventory.StartingArena");
-    public static final ItemBuilder NEXT_PAGE_ITEM = GUIStructure.readBuilder("Menu.ArenaInventory.NextPage");
-    public static final ItemBuilder PREVIOUS_PAGE_ITEM = GUIStructure.readBuilder("Menu.ArenaInventory.PreviousPage");
+    private static final ItemBuilder NEXT_PAGE_ITEM = GUIStructure.readBuilder("Menu.ArenaInventory.NextPage");
+    private static final ItemBuilder PREVIOUS_PAGE_ITEM = GUIStructure.readBuilder("Menu.ArenaInventory.PreviousPage");
     private static final Map<Integer, GUIItem> ITEMS = GUIStructure.readInventory("Menu.ArenaInventory");
 
 

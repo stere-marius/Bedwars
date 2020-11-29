@@ -53,15 +53,12 @@ public class PaginatedInventory extends ExtraInventory {
         this.previousPageItem = paginatedInventory.previousPageItem;
         this.paginatedInventoryItems = paginatedInventory.paginatedInventoryItems;
         this.extraInventoryItems = paginatedInventory.extraInventoryItems;
-        this.currentPage = currentPage;
-
     }
 
     @Override
     public @NotNull Inventory getInventory() {
         inventory = Bukkit.createInventory(this, inventorySize, Utils.translate(inventoryName));
         setInventoryItems();
-
         return inventory;
     }
 
@@ -159,7 +156,4 @@ public class PaginatedInventory extends ExtraInventory {
         this.paginatedInventoryItems = paginatedInventoryItems;
     }
 
-    public void setInventoryName(String inventoryName) {
-        this.inventoryName = inventoryName;
-    }
 }

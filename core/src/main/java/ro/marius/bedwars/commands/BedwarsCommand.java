@@ -246,7 +246,7 @@ public class BedwarsCommand extends AbstractCommand {
         if ("arenasGUI".equalsIgnoreCase(args[0])) {
 
             if (args.length >= 2) {
-                p.openInventory(new ArenaInventory().getInventory());
+                p.openInventory(new ArenaInventory(args[1]).getInventory());
                 return;
             }
 
