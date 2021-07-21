@@ -183,9 +183,6 @@ public class TeamEditInventory extends ExtraInventory {
                 gameEdit.setCurrentConversation(conversationColor);
                 gameEdit.setCurrentTask(p);
                 return;
-            case 33:
-                // TODO: Open GUI preview team
-                return;
         }
 
         if (e.getClick() == ClickType.RIGHT) {

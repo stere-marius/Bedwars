@@ -11,6 +11,7 @@ public class DebugUtils {
 
     public static String getRejoinMapToString(AMatch match) {
 
+
         StringJoiner stringJoiner = new StringJoiner(" , ");
 
         for (Map.Entry<UUID, Team> entry : match.getRejoinMap().entrySet()) {

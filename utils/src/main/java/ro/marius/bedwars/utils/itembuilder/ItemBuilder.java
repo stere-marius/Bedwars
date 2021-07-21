@@ -96,6 +96,7 @@ public class ItemBuilder implements Cloneable {
         if (!this.itemStack.hasItemMeta()) {
             return this;
         }
+
         if (!this.itemStack.getItemMeta().hasLore()) {
             return this;
         }
@@ -110,6 +111,7 @@ public class ItemBuilder implements Cloneable {
         ItemMeta meta = this.itemStack.getItemMeta();
         meta.setLore(newLore);
         this.itemStack.setItemMeta(meta);
+
         return this;
     }
 

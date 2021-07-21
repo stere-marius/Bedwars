@@ -21,7 +21,6 @@ public class NPClick implements Listener {
 
         String arenaType = entity.getMetadata("BedwarsNPC").get(0).asString();
         p.openInventory(new JoinInventory(arenaType).getInventory());
-
     }
 
 //	@EventHandler

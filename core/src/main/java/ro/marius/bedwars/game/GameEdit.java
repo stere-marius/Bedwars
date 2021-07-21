@@ -90,11 +90,13 @@ public class GameEdit {
         ManagerHandler.getGameManager().getGame().set("Games." + game.getName(), null);
         saveEditedGameToFile();
         saveArenaTypeToDatabase();
+        World world = Bukkit.getWorld(currentGameName);
+        world.save();
+        ManagerHandler.getWorldManager().getWorldAdapter().saveWorldFile(world.getName());
 
-
-        System.out.println("The game " + game.getName() + " has been saved");
 
     }
+
 
     public void saveArenaTypeToDatabase() {
         if (!currentArenaType.equals(game.getArenaType()) && BedWarsPlugin.getInstance().isSQLEnabled()) {

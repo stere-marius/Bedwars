@@ -15,10 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import ro.marius.bedwars.AbstractCommand;
-import ro.marius.bedwars.BedWarsPlugin;
-import ro.marius.bedwars.ISubCommand;
-import ro.marius.bedwars.WorldCallback;
+import ro.marius.bedwars.*;
 import ro.marius.bedwars.commands.subcommand.EditCommand;
 import ro.marius.bedwars.commands.subcommand.NPCommand;
 import ro.marius.bedwars.commands.subcommand.TestCommand;
@@ -226,19 +223,6 @@ public class BedwarsCommand extends AbstractCommand {
             AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(p.getUniqueId());
             p.openInventory(new TeamSelectorInventory(match).getInventory());
             p.sendMessage("OPENED");
-
-            return;
-        }
-
-        if ("hexColor".equalsIgnoreCase(args[0])) {
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            for (int i = 1; i < args.length; i++) {
-                stringBuilder.append(args[i]).append(" ");
-            }
-
-            p.sendMessage(Utils.translate(stringBuilder.toString()));
 
             return;
         }

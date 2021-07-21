@@ -13,13 +13,14 @@ import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.team.Team;
 import ro.marius.bedwars.utils.itembuilder.ItemBuilder;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class TeamSelectorInventory extends PaginatedInventory implements GameObserver {
 
     private final AMatch match;
     public static final TeamSelectorConfiguration TEAM_SELECTOR_CONFIGURATION = new TeamSelectorConfiguration();
+
+    private Map<Team, ItemBuilder> teamDisplayItem = new HashMap<>();
 
     public TeamSelectorInventory(AMatch match) {
         super(TEAM_SELECTOR_CONFIGURATION.getConfig().getString("Menu.TeamSelector.InventoryName"),
@@ -65,7 +66,9 @@ public class TeamSelectorInventory extends PaginatedInventory implements GameObs
                     .replaceInLore("<teamColor>", team.getTeamColor().getChatColor())
                     .replaceInLore("<teamColorName>", team.getColorName())
                     .replaceInLore("<teamName>", team.getName())
-                    .replaceInLore("<teamPlayersInLine>", team.getPlayersName());
+                    .replaceInLore("<teamPlayersInLine>", team.getPlayersName())
+                    .replaceInLore("<teamMaxPlayers>", match.getGame().getPlayersPerTeam() + "")
+                    .replaceInLore("<teamPlayersSize>", team.getPlayers().size() + "");
 
             pagination.add(new InventoryItem(teamPickerItem.getSlotList().get(currentTeamPickerSlot), itemBuilder.build()));
             currentTeamPickerSlot = currentTeamPickerSlot + 1 >= teamPickerItem.getSlotList().size() ? 0 : ++currentTeamPickerSlot;
@@ -73,6 +76,10 @@ public class TeamSelectorInventory extends PaginatedInventory implements GameObs
 
         return pagination;
     }
+
+    // le generez prima data
+    // le mapez <team, itembuilder>
+    // la update le mapez din nou
 
     @Override
     public void onClick(InventoryClickEvent e) {
@@ -113,6 +120,34 @@ public class TeamSelectorInventory extends PaginatedInventory implements GameObs
         chosenTeam.getPlayers().add(player);
 
     }
+
+//    public void updateTeamsDisplayItem(){
+//
+//        ConfiguredGUIItem teamPickerItem = ConfiguredGUIItem.readFromConfig("Menu.TeamSelector.Contents.TEAM_PICKER_ITEM", TEAM_SELECTOR_CONFIGURATION.getConfig());
+//        boolean updateBasedOnTeamPlayers = (boolean) teamPickerItem.getAdditionalProperties().get("StackBasedOnTeamPlayers");
+//
+//        for(Map.Entry<Team, ItemBuilder> teamDisplayItem: teamDisplayItem.entrySet()) {
+//
+//            Team team = teamDisplayItem.getKey();
+//            ItemBuilder itemBuilder = teamDisplayItem.getValue();
+//
+//            if (updateBasedOnTeamPlayers) {
+//                itemBuilder.withAmount(team.getPlayers().isEmpty() ? 1 : team.getPlayers().size());
+//            }
+//
+//            itemBuilder.setDisplayName(teamPickerItem.getDisplayName()
+//                    .replace("<teamColor>", team.getTeamColor().getChatColor())
+//                    .replace("<teamColorName>", team.getColorName())
+//                    .replace("<teamName>", team.getName()));
+//            itemBuilder
+//                    .replaceInLore("<teamColor>", team.getTeamColor().getChatColor())
+//                    .replaceInLore("<teamColorName>", team.getColorName())
+//                    .replaceInLore("<teamName>", team.getName())
+//                    .replaceInLore("<teamPlayersInLine>", team.getPlayersName());
+//        }
+//
+//
+//    }
 
     @Override
     public void update() {

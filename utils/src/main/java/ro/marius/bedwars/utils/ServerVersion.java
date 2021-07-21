@@ -13,7 +13,8 @@ public enum ServerVersion {
     v1_14_R1(8),
     v1_15_R1(9),
     v1_16_R1(10),
-    v1_16_R2(11);
+    v1_16_R2(11),
+    v1_16_R3(12);
 
     private final int id;
 

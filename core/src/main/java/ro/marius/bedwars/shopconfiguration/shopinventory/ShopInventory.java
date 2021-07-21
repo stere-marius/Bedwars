@@ -101,9 +101,7 @@ public class ShopInventory extends CustomInventory {
                     for (String u : upgradeMap.keySet()) {
                         itemBuilder.replaceInLore("<TIER_TEAM_UPGRADE:" + u + ">", upgradeMap.get(u).getRomanTier());
                     }
-
                 }
-
             }
 
             if (values.contains(icon.getPath())) {

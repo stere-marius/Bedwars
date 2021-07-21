@@ -488,6 +488,7 @@ public class ConfigurationHelper {
 
         String material = shopConfig.getString(path + ".Material");
         String name = shopConfig.getString(path + ".Name");
+        boolean unbreakable = shopConfig.getBoolean(path + ".Unbreakable");
         int data = shopConfig.getInt(path + ".Data");
         int amount = shopConfig.getInt(path + ".Amount", 1);
         boolean isGlowing = shopConfig.getBoolean(path + ".Glowing");
@@ -536,6 +537,10 @@ public class ConfigurationHelper {
             builder.glowingItem(ManagerHandler.getVersionManager().getVersionWrapper());
         }
 
+        if (unbreakable) {
+            builder.setUnbreakable(ManagerHandler.getVersionManager().getVersionWrapper());
+        }
+
         return builder;
 
     }
@@ -551,7 +556,7 @@ public class ConfigurationHelper {
 
     public List<String> readUpgrades(FileConfiguration shopConfig, String arenaType, String path) {
 
-        if (shopConfig.getStringList(path + ".Receive.UPGRADE") == null) {
+        if (shopConfig.getStringList(path + ".Receive.UPGRADE").isEmpty()) {
             return Collections.emptyList();
         }
         if (shopConfig.getStringList(path + ".Receive.UPGRADE").isEmpty()) {

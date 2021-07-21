@@ -265,12 +265,6 @@ public class SimpleWorldAdapter extends WorldAdapter {
 
     }
 
-    @Override
-    public void loadGameWorld(String worldName, WorldCallback callback) {
-        // TODO Auto-generated method stub
-
-    }
-
     public boolean isRegenerable(String s) {
 
         return s.equals(this.FIRST_WORLD) || "world_nether".equals(s) || "world_end".equals(s);

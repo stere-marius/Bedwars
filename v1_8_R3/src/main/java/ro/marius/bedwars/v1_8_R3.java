@@ -16,6 +16,7 @@ import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Bed;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,10 +57,9 @@ public class v1_8_R3 implements VersionWrapper {
 
     @Override
     public void setUnbreakable(ItemStack itemStack) {
-        net.minecraft.server.v1_8_R3.ItemStack nmsItem = CraftItemStack.asNMSCopy(itemStack);
-        NBTTagCompound compound = (nmsItem.hasTag()) ? nmsItem.getTag() : new NBTTagCompound();
-        compound.setBoolean("Unbreakable", true);
-        nmsItem.setTag(compound);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.spigot().setUnbreakable(true);
+        itemStack.setItemMeta(itemMeta);
     }
 
     @Override
@@ -164,18 +164,11 @@ public class v1_8_R3 implements VersionWrapper {
 
     @Override
     public void sendPacketEquipment(Player p, Player sendTo, ItemStack modified, int slot) {
-
-        // 1 - helmet
-        // 2 - body armor
-        // 3 - pants
-        // 4 - boots
-
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment();
         ReflectionUtils.setFieldValue("a", packet.getClass(), packet, ((CraftPlayer) p).getHandle().getBukkitEntity().getEntityId());
         ReflectionUtils.setFieldValue("b", packet.getClass(), packet, slot);
         ReflectionUtils.setFieldValue("c", packet.getClass(), packet, CraftItemStack.asNMSCopy(modified));
         ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
-
     }
 
     @Override

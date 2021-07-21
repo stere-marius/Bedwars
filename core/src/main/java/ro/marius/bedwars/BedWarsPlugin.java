@@ -182,6 +182,7 @@ public class BedWarsPlugin extends JavaPlugin {
     public void setupFAWE() {
 
         int versionID = ManagerHandler.getVersionManager().getServerVersion().getID();
+
         if (!this.getConfig().getBoolean("FastAsyncWorldEdit")) {
             return;
         }

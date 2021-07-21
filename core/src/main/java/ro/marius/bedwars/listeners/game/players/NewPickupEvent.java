@@ -1,5 +1,6 @@
 package ro.marius.bedwars.listeners.game.players;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,10 +35,31 @@ public class NewPickupEvent implements Listener {
 
         match.getMatchEntity().remove(e.getItem());
 
-        if (!e.getItem().getItemStack().getType().name().endsWith("_SWORD"))
+        if (e.getItem().getItemStack().getType().name().endsWith("_SWORD")) {
+            Utils.hideWoodenSword(p);
+            match.getPlayerTeam().get(p.getUniqueId()).applyEnchant("SWORD", p);
+            return;
+        }
+
+        // Teams Generator Split Logic
+        if (match.getGame().getPlayersPerTeam() < 2)
             return;
 
-        Utils.hideWoodenSword(p);
-        match.getPlayerTeam().get(p.getUniqueId()).applyEnchant("SWORD", p);
+        if (e.getItem().getMetadata("FloorGeneratorItem").isEmpty())
+            return;
+
+        for (Player player : match.getPlayers()) {
+
+            if (player.getLocation().distance(p.getLocation()) > 1.75)
+                continue;
+
+            if (player.getUniqueId().equals(p.getUniqueId()))
+                continue;
+
+            if (match.getSpectators().contains(p))
+                continue;
+
+            player.getInventory().addItem(e.getItem().getItemStack());
+        }
     }
 }

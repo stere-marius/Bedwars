@@ -6,10 +6,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import ro.marius.bedwars.configuration.Lang;
 import ro.marius.bedwars.game.Game;
+import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.team.PermanentItemList;
 import ro.marius.bedwars.team.Team;
 import ro.marius.bedwars.utils.Utils;
 import ro.marius.bedwars.utils.XMaterial;
+import ro.marius.bedwars.utils.itembuilder.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class BuyItemAction implements IconAction {
 
         for (RewardItem rewardItem : this.reward) {
 
-            final ItemStack finalItem = rewardItem.getReward().build();
+            ItemStack finalItem = rewardItem.getReward().build();
             Material material = finalItem.getType();
             String mName = material.name();
 
@@ -78,6 +80,7 @@ public class BuyItemAction implements IconAction {
 
             if (mName.endsWith("SWORD")) {
                 this.removeWoodenSword(p);
+                finalItem = new ItemBuilder(finalItem).setUnbreakable(ManagerHandler.getVersionManager().getVersionWrapper()).build();
 
                 if (p.getInventory().getItem(0) == null) {
                     p.getInventory().setItem(0, finalItem);

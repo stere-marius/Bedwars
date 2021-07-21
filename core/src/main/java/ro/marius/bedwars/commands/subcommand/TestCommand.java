@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.ISubCommand;
 import ro.marius.bedwars.floorgenerator.FloorGenerator;
@@ -374,6 +375,18 @@ public class TestCommand implements ISubCommand {
             return;
         }
 
+
+        if("drinkPotion".equalsIgnoreCase(args[1])) {
+
+            ItemStack itemStack = new ItemStack(Material.AIR);
+            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 1);
+            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 2);
+            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 3);
+            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 4);
+            p.sendMessage("DONE");
+
+            return;
+        }
 
     }
 

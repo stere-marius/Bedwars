@@ -3,6 +3,7 @@ package ro.marius.bedwars.manager.type;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.npc.skin.SkinnableEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -61,7 +62,8 @@ public class NPCManager {
         int playersPlaying = ManagerHandler.getGameManager().getPlayersPlaying(arenaType);
 
         for (String line : lines) {
-            ArmorStand stand = Utils.getSpawnedArmorStand(clonedLocation, Utils.translate(line).replace("<playersPlaying>", playersPlaying + ""));
+            ArmorStand stand = Utils.getSpawnedArmorStand(clonedLocation,
+                    Utils.translate(line).replace("<playersPlaying>", playersPlaying + ""));
             stand.setRemoveWhenFarAway(false);
             clonedLocation = clonedLocation.add(0, distance, 0);
             stand.setMetadata("BedwarsStand", METADATA);
@@ -122,6 +124,12 @@ public class NPCManager {
         npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
 
         Entity npcEntity = npc.getEntity();
+
+        if (npcEntity == null) {
+            System.out.println("npcEntity == null");
+            return;
+        }
+
         npcEntity.setMetadata("BedwarsNPC", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
 
         if (npcEntity instanceof SkinnableEntity) {

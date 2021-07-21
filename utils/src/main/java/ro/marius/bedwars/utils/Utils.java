@@ -218,7 +218,6 @@ public class Utils {
                 continue;
             }
             if (is.getType().name().endsWith(endsWith)) {
-//				Bukkit.broadcastMessage("Removed " + is.getType().name() + " from invetory");
                 p.getInventory().clear(i);
             }
         }

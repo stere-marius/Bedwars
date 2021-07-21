@@ -318,11 +318,6 @@ public class SlimeWorldAdapter extends WorldAdapter {
 
     }
 
-    @Override
-    public void loadGameWorld(String worldName, WorldCallback callback) {
-
-    }
-
     public boolean worldExists(String worldName) {
         try {
             return this.bedwarsLoader.worldExists(worldName);

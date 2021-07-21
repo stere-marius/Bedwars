@@ -19,7 +19,6 @@ public abstract class WorldAdapter {
     private static final Set<String> EXCLUDE_FILES = new HashSet<>(
             Arrays.asList("session.lock", "stats", "playerdata", "uid.dat"));
 
-    public abstract void loadGameWorld(String worldName, WorldCallback callback);
 
     public abstract void loadWorld(String worldName, WorldCallback callback);
 

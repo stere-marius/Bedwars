@@ -6,6 +6,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import ro.marius.bedwars.BedWarsPlugin;
@@ -18,6 +20,8 @@ import java.util.List;
 
 public class FloorGenerator {
 
+    private static final MetadataValue ITEM_METADATA = new FixedMetadataValue(BedWarsPlugin.getInstance(), "FloorGeneratorItem");
+
     private final int limit;
     private FloorGeneratorType type;
     private AMatch match;
@@ -29,9 +33,9 @@ public class FloorGenerator {
     private int timeTask;
 
     // FloorGenerator informations
-    private List<Item> droppedItems = new ArrayList<>();
-    private Material drop;
-    private boolean isLimit;
+    private final List<Item> droppedItems = new ArrayList<>();
+    private final Material drop;
+    private final boolean isLimit;
 
     public FloorGenerator(AMatch match, FloorGeneratorType type, int amount, int time, GameLocation loc) {
         this.match = match;
@@ -72,6 +76,7 @@ public class FloorGenerator {
                         : (((droppedAmount + FloorGenerator.this.amount) > FloorGenerator.this.limit) ? (FloorGenerator.this.limit - droppedAmount) : FloorGenerator.this.amount);
                 ItemStack itemStack = new ItemStack(FloorGenerator.this.drop, limitedAmount);
                 Item item = world.dropItem(dropLocation, itemStack);
+                item.setMetadata("FloorGeneratorItem", ITEM_METADATA);
                 item.setVelocity(Utils.EMPTY_VECTOR);
                 FloorGenerator.this.match.getMatchEntity().add(item);
                 FloorGenerator.this.droppedItems.add(item);

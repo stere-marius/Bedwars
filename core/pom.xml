@@ -87,12 +87,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>ro.marius</groupId>
             <artifactId>utils</artifactId>
             <version>1.5.8</version>
@@ -149,6 +143,12 @@
         <dependency>
             <groupId>ro.marius</groupId>
             <artifactId>v1_16_R1</artifactId>
+            <version>1.5.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ro.marius</groupId>
+            <artifactId>v1_16_R3</artifactId>
             <version>1.5.8</version>
             <scope>compile</scope>
         </dependency>

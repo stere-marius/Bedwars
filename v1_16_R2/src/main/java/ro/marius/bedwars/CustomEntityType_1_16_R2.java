@@ -18,7 +18,7 @@ public class CustomEntityType_1_16_R2<T extends EntityLiving> {
 
     static {
         try {
-            REGISTRY_MAT_MAP = RegistryMaterials.class.getDeclaredField("c");
+            REGISTRY_MAT_MAP = RegistryMaterials.class.getDeclaredField("bh");
         } catch (ReflectiveOperationException err) {
             err.printStackTrace();
             REGISTRY_MAT_MAP = null;

@@ -36,6 +36,9 @@ public class VersionManager {
         NMSHologramWrapper hologramWrapper = null;
 
         switch (this.versionName) {
+            case "v1_16_R3":
+                hologramWrapper = new H_1_16_R3();
+                break;
             case "v1_16_R2":
                 hologramWrapper = new H_1_16_R2();
                 break;
@@ -82,6 +85,10 @@ public class VersionManager {
 
         switch (this.versionName) {
 
+            case "v1_16_R3":
+                this.serverVersion = ServerVersion.v1_16_R3;
+                this.versionWrapper = new v1_16_R3();
+                break;
             case "v1_16_R2":
                 this.serverVersion = ServerVersion.v1_16_R2;
                 this.versionWrapper = new v1_16_R2();

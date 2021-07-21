@@ -32,12 +32,32 @@ public class PlayerPickItem implements Listener {
 
         match.getMatchEntity().remove(e.getItem());
 
-        if (!e.getItem().getItemStack().getType().name().endsWith("_SWORD"))
+        if (e.getItem().getItemStack().getType().name().endsWith("_SWORD")){
+            Utils.hideWoodenSword(e.getPlayer());
+            match.getPlayerTeam().get(p.getUniqueId()).applyEnchant("SWORD", e.getPlayer());
+            return;
+        }
+
+        // Teams Generator Split Logic
+        if (match.getGame().getPlayersPerTeam() < 2)
             return;
 
+        if (e.getItem().getMetadata("FloorGeneratorItem").isEmpty())
+            return;
 
-        Utils.hideWoodenSword(e.getPlayer());
-        match.getPlayerTeam().get(p.getUniqueId()).applyEnchant("SWORD", e.getPlayer());
+        for (Player player : match.getPlayers()) {
+
+            if (player.getLocation().distance(p.getLocation()) > 1.75)
+                continue;
+
+            if (player.getUniqueId().equals(p.getUniqueId()))
+                continue;
+
+            if (match.getSpectators().contains(p))
+                continue;
+
+            player.getInventory().addItem(e.getItem().getItemStack());
+        }
     }
 
 }

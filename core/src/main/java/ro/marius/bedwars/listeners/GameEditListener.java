@@ -3,6 +3,8 @@ package ro.marius.bedwars.listeners;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import ro.marius.bedwars.game.GameEdit;
@@ -28,6 +30,8 @@ public class GameEditListener implements Listener {
         if (e.getItem() == null)
             return;
         if (!e.getItem().isSimilar(EDIT_GAME_ITEM))
+            return;
+        if (!e.getAction().name().startsWith("RIGHT"))
             return;
 
 
