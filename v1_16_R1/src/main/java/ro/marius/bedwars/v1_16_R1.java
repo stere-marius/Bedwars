@@ -235,34 +235,41 @@ public class v1_16_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendPacketEquipment(Player p, Player sendTo, ItemStack modified, int slotIndex) {
-
-        EnumItemSlot enumItemSlot;
-
-        switch (slotIndex) {
-            case 1:
-                enumItemSlot = EnumItemSlot.FEET;
-                break;
-            case 2:
-                enumItemSlot = EnumItemSlot.LEGS;
-                break;
-            case 3:
-                enumItemSlot = EnumItemSlot.CHEST;
-                break;
-            case 4:
-                enumItemSlot = EnumItemSlot.HEAD;
-                break;
-            default:
-                throw new NullPointerException("Couldn't find the EnumItemSlot with index " + slotIndex + " on v1_16_R1 ");
-        }
-
-        int entityID = ((CraftPlayer) p).getHandle().getBukkitEntity().getEntityId();
+    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
         List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack>> items = new ArrayList<>();
-        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pair = new Pair<>(enumItemSlot, CraftItemStack.asNMSCopy(modified));
-        items.add(pair);
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityID, items);
-        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairHead = new Pair<>(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(null));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairChest = new Pair<>(EnumItemSlot.CHEST, CraftItemStack.asNMSCopy(null));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairLegs = new Pair<>(EnumItemSlot.LEGS, CraftItemStack.asNMSCopy(null));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairFeet = new Pair<>(EnumItemSlot.FEET, CraftItemStack.asNMSCopy(null));
+        items.add(pairHead);
+        items.add(pairChest);
+        items.add(pairLegs);
+        items.add(pairFeet);
 
+        int entityID = ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId();
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityID, items);
+        playersToSendPacket.forEach(p -> ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet));
+    }
+
+    @Override
+    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+        List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack>> items = new ArrayList<>();
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairHead =
+                new Pair<>(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(player.getInventory().getHelmet()));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairChest =
+                new Pair<>(EnumItemSlot.CHEST, CraftItemStack.asNMSCopy(player.getInventory().getChestplate()));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairLegs =
+                new Pair<>(EnumItemSlot.LEGS, CraftItemStack.asNMSCopy(player.getInventory().getLeggings()));
+        Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairFeet =
+                new Pair<>(EnumItemSlot.FEET, CraftItemStack.asNMSCopy(player.getInventory().getBoots()));
+        items.add(pairHead);
+        items.add(pairChest);
+        items.add(pairLegs);
+        items.add(pairFeet);
+
+        int entityID = ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId();
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityID, items);
+        playersToSendPacket.forEach(p -> ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet));
     }
 
     @Override
