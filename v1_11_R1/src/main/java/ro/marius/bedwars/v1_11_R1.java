@@ -79,22 +79,22 @@ public class v1_11_R1 implements VersionWrapper {
         PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 EnumItemSlot.HEAD,
-                null
+                net.minecraft.server.v1_11_R1.ItemStack.a
         );
         PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 EnumItemSlot.CHEST,
-                null
+                net.minecraft.server.v1_11_R1.ItemStack.a
         );
         PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 EnumItemSlot.LEGS,
-                null
+                net.minecraft.server.v1_11_R1.ItemStack.a
         );
         PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 EnumItemSlot.FEET,
-                null
+                net.minecraft.server.v1_11_R1.ItemStack.a
         );
 
         for (Player playerToSend : playersToSendPacket) {
