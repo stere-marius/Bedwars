@@ -77,33 +77,67 @@ public class v1_10_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendPacketEquipment(Player p, Player sendTo, ItemStack modified, int slotIndex) {
+    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
 
-        EnumItemSlot enumItemSlot;
+        PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.HEAD,
+                null
+        );
+        PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.CHEST,
+                null
+        );
+        PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.LEGS,
+                null
+        );
+        PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.FEET,
+                null
+        );
 
-        switch (slotIndex) {
-            case 1:
-                enumItemSlot = EnumItemSlot.FEET;
-                break;
-            case 2:
-                enumItemSlot = EnumItemSlot.LEGS;
-                break;
-            case 3:
-                enumItemSlot = EnumItemSlot.CHEST;
-                break;
-            case 4:
-                enumItemSlot = EnumItemSlot.HEAD;
-                break;
-            default:
-                throw new NullPointerException("Couldn't find the EnumItemSlot with index " + slotIndex + " on v1_10_R1 ");
+        for (Player playerToSend : playersToSendPacket) {
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetHelmet);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetChestplate);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetLeggings);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetBoots);
         }
 
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment();
-        ReflectionUtils.setFieldValue("a", packet.getClass(), packet, ((CraftPlayer) p).getHandle().getBukkitEntity().getEntityId());
-        ReflectionUtils.setFieldValue("b", packet.getClass(), packet, enumItemSlot);
-        ReflectionUtils.setFieldValue("c", packet.getClass(), packet, CraftItemStack.asNMSCopy(modified));
-        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
+    }
 
+    @Override
+    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+        PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.HEAD,
+                CraftItemStack.asNMSCopy(player.getInventory().getHelmet())
+        );
+        PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.CHEST,
+                CraftItemStack.asNMSCopy(player.getInventory().getChestplate())
+        );
+        PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.LEGS,
+                CraftItemStack.asNMSCopy(player.getInventory().getLeggings())
+        );
+        PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                EnumItemSlot.FEET,
+                CraftItemStack.asNMSCopy(player.getInventory().getBoots())
+        );
+
+        for (Player playerToSend : playersToSendPacket) {
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetHelmet);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetChestplate);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetLeggings);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetBoots);
+        }
     }
 
     @Override
