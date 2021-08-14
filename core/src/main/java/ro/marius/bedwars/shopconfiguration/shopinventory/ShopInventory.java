@@ -67,7 +67,7 @@ public class ShopInventory extends CustomInventory {
             icon.setGame(this.game);
             icon.setTeam(this.team);
 
-            ItemBuilder itemBuilder = new ItemBuilder(icon.getItemBuilder())/* .clone() */;
+            ItemBuilder itemBuilder = new ItemBuilder(icon.getItemBuilder());
 
             for (Requirement r : icon.getRequirement()) {
 

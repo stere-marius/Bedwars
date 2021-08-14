@@ -7,9 +7,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,7 +47,9 @@ public interface VersionWrapper {
     }
 
     default void setUnbreakable(ItemStack itemStack) {
-        itemStack.getItemMeta().setUnbreakable(true);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setUnbreakable(true);
+        itemStack.setItemMeta(itemMeta);
     }
 
     void sendTitle(Player p, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle,
@@ -73,7 +77,9 @@ public interface VersionWrapper {
 
     String getNBTTag(ItemStack item, String tag);
 
-    void sendPacketEquipment(Player p, Player sendTo, ItemStack modified, int slot);
+    void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket);
+
+    void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket);
 
     Villager spawnVillager(Location location);
 

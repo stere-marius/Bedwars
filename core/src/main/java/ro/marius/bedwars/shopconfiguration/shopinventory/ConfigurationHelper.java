@@ -510,6 +510,7 @@ public class ConfigurationHelper {
             m = this.STONE;
         }
 
+
         Material mat = m.parseMaterial();
 
         if (mat == null) {
@@ -521,9 +522,14 @@ public class ConfigurationHelper {
 
         ItemBuilder builder = new ItemBuilder(m, amount);
 
-        if (m.parseMaterial() == Material.POTION) {
-            builder = new PotionBuilder(amount).addEffectType(PotionEffectType.ABSORPTION, 20 * 10, 0);
+        if (m == XMaterial.POTION) {
+            builder = this.readPotionEffect(shopConfig, path);
+            builder.withAmount(amount);
         }
+
+//        if (m.parseMaterial() == Material.POTION) {
+//            builder = new PotionBuilder(amount).addEffectType(PotionEffectType.ABSORPTION, 20 * 10, 0);
+//        }
 
         if (name != null) {
             builder.setDisplayName(name);
@@ -603,6 +609,7 @@ public class ConfigurationHelper {
             boolean rEnchanted = shopConfig.getBoolean(rewardPath + ".Glowing");
             boolean isPermanent = shopConfig.getBoolean(rewardPath + ".Permanent");
             boolean isPermanentItem = shopConfig.getBoolean(rewardPath + ".PermanentItem");
+            boolean unbreakable = shopConfig.getBoolean(rewardPath + ".Unbreakable");
 
             if (rMaterial == null) {
                 this.sendShopError("&cPath: " + contentsPath + ".Receive.ITEM." + reward + ".Material",
@@ -697,11 +704,15 @@ public class ConfigurationHelper {
                 rBuilder.glowingItem(ManagerHandler.getVersionManager().getVersionWrapper());
             }
 
-            if (enchant != null) {
-
-                rBuilder.addEnchants(this.getEnchants(enchant));
-
+            if (unbreakable) {
+                rBuilder.setUnbreakable(ManagerHandler.getVersionManager().getVersionWrapper());
             }
+
+            if (enchant != null) {
+                rBuilder.addEnchants(this.getEnchants(enchant));
+            }
+
+
 
             itemsList.add(new RewardItem(rBuilder, isPermanent || isPermanentItem));
         }

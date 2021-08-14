@@ -14,6 +14,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ro.marius.bedwars.*;
 import ro.marius.bedwars.commands.subcommand.EditCommand;
@@ -40,6 +43,7 @@ import ro.marius.bedwars.team.Team;
 import ro.marius.bedwars.upgradeconfiguration.upgradeinventory.UpgradeInventory;
 import ro.marius.bedwars.utils.*;
 import ro.marius.bedwars.utils.itembuilder.ItemBuilder;
+import ro.marius.bedwars.utils.itembuilder.PotionBuilder;
 
 import java.io.File;
 import java.util.*;
@@ -205,15 +209,6 @@ public class BedwarsCommand extends AbstractCommand {
             p.sendMessage("Player hologram size " + size);
             p.sendMessage("Player hologram location list " + playerHologram.getLocationHolograms().size());
             p.sendMessage("Player hologram list " + playerHologram.getPlayerHolograms().values().size());
-
-            return;
-        }
-
-
-        if ("removeHologram".equalsIgnoreCase(args[0])) {
-            PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram().get(p);
-            playerHologram.removeHologram();
-            p.sendMessage("The holograms have been removed.");
 
             return;
         }
@@ -561,6 +556,29 @@ public class BedwarsCommand extends AbstractCommand {
             }
 
             p.sendMessage("DONE");
+            return;
+        }
+
+        if ("givePotions".equalsIgnoreCase(args[0])) {
+
+            PotionBuilder potionBuilder = new PotionBuilder(1);
+
+            if (args.length >= 5) {
+                potionBuilder.setPotionBaseType(PotionType.valueOf(args[1]));
+                potionBuilder.addEffectType(PotionEffectType.getByName(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
+            }
+
+            if (args.length == 2) {
+                potionBuilder.setPotionBaseType(PotionType.valueOf(args[1]));
+            }
+
+
+            ItemBuilder itemBuilder = new ItemBuilder(potionBuilder);
+
+            p.getInventory().addItem(itemBuilder.build());
+            p.getInventory().addItem(potionBuilder.build());
+            p.sendMessage("DONE");
+
             return;
         }
 
@@ -1036,6 +1054,14 @@ public class BedwarsCommand extends AbstractCommand {
 
             if (game == null) {
                 p.sendMessage(Utils.translate("&cThe arena " + args[1] + " doesn't exist."));
+                return;
+            }
+
+            MatchState matchState = game.getMatch().getMatchState();
+            boolean canClone = matchState == MatchState.IN_WAITING || matchState == MatchState.CLOSED;
+
+            if (!canClone) {
+                p.sendMessage(Utils.translate("&cA match is being played in this arena. You can't clone it for the moment."));
                 return;
             }
 

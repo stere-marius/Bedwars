@@ -42,7 +42,7 @@ public class GameLocation {
 
     @Override
     public GameLocation clone() {
-        return new GameLocation(this.string, this.location, this.worldName);
+        return new GameLocation(this.string, this.location.clone(), this.worldName);
     }
 
     public void reloadLocation() {

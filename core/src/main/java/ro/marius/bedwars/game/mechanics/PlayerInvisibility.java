@@ -23,9 +23,8 @@ public class PlayerInvisibility {
     private AMatch match;
     private Team team;
     private Player player;
-//	private int seconds;
 
-    public PlayerInvisibility(AMatch match, Player player/*, int seconds*/) {
+    public PlayerInvisibility(AMatch match, Player player) {
 
         this.helmet = player.getInventory().getHelmet();
         this.chestplate = player.getInventory().getChestplate();
@@ -34,7 +33,6 @@ public class PlayerInvisibility {
         this.match = match;
         this.team = match.getPlayerTeam().get(player.getUniqueId());
         this.player = player;
-//		this.seconds = seconds;
     }
 
     public void putInvisibility() {
@@ -137,37 +135,6 @@ public class PlayerInvisibility {
         this.task.cancel();
     }
 
-    public ItemStack getHelmet() {
-        return this.helmet;
-    }
-
-    public void setHelmet(ItemStack helmet) {
-        this.helmet = helmet;
-    }
-
-    public ItemStack getChestplate() {
-        return this.chestplate;
-    }
-
-    public void setChestplate(ItemStack chestplate) {
-        this.chestplate = chestplate;
-    }
-
-    public ItemStack getLeggings() {
-        return this.leggings;
-    }
-
-    public void setLeggings(ItemStack leggings) {
-        this.leggings = leggings;
-    }
-
-    public ItemStack getBoots() {
-        return this.boots;
-    }
-
-    public void setBoots(ItemStack boots) {
-        this.boots = boots;
-    }
 
     public BukkitTask getTask() {
         return this.task;

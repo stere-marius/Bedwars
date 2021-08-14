@@ -294,6 +294,10 @@ public class ItemBuilder implements Cloneable {
         return this.itemStack;
     }
 
+    public void setItemStack(ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
     public ItemStack getItemStack() {
         return this.itemStack;
     }

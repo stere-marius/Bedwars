@@ -17,9 +17,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Bed;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
 import ro.marius.bedwars.irongolem.I_V_1_8_R3;
 import ro.marius.bedwars.shopkeepers.*;
 import ro.marius.bedwars.utils.ReflectionUtils;
@@ -163,12 +166,66 @@ public class v1_8_R3 implements VersionWrapper {
     }
 
     @Override
-    public void sendPacketEquipment(Player p, Player sendTo, ItemStack modified, int slot) {
-        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment();
-        ReflectionUtils.setFieldValue("a", packet.getClass(), packet, ((CraftPlayer) p).getHandle().getBukkitEntity().getEntityId());
-        ReflectionUtils.setFieldValue("b", packet.getClass(), packet, slot);
-        ReflectionUtils.setFieldValue("c", packet.getClass(), packet, CraftItemStack.asNMSCopy(modified));
-        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
+    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+        PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                1,
+                null
+        );
+        PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                2,
+                null
+        );
+        PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                3,
+                null
+        );
+        PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                4,
+                null
+        );
+
+        for (Player playerToSend : playersToSendPacket) {
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetHelmet);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetChestplate);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetLeggings);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetBoots);
+        }
+
+    }
+
+    @Override
+    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+        PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                1,
+                CraftItemStack.asNMSCopy(player.getInventory().getHelmet())
+        );
+        PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                2,
+                CraftItemStack.asNMSCopy(player.getInventory().getChestplate())
+        );
+        PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                3,
+                CraftItemStack.asNMSCopy(player.getInventory().getLeggings())
+        );
+        PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
+                ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
+                4,
+                CraftItemStack.asNMSCopy(player.getInventory().getBoots())
+        );
+
+        for (Player playerToSend : playersToSendPacket) {
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetHelmet);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetChestplate);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetLeggings);
+            ((CraftPlayer) playerToSend).getHandle().playerConnection.sendPacket(packetBoots);
+        }
     }
 
     @Override

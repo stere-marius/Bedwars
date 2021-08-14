@@ -16,18 +16,12 @@ import ro.marius.bedwars.utils.Utils;
 
 public class PlayerDrinkPotions implements Listener {
 
-//	private final PotionEffect invisibility = new PotionEffect(PotionEffectType.INVISIBILITY, 20 * 45, 0);
 
     @EventHandler
     public void onDrink(PlayerItemConsumeEvent e) {
 
         ItemStack item = e.getItem();
         Player p = e.getPlayer();
-
-//		if (!item.hasItemMeta())
-//			return;
-//		if (!item.getItemMeta().hasDisplayName())
-//			return;
 
         if (!(item.getItemMeta() instanceof PotionMeta)) {
             return;
@@ -56,12 +50,16 @@ public class PlayerDrinkPotions implements Listener {
         }
 
         if (invisibility == null) {
-            meta.getCustomEffects().forEach(p::addPotionEffect);
+            meta.getCustomEffects().forEach(eff -> p.addPotionEffect(eff, true));
             return;
         }
 
 
-        p.addPotionEffect(invisibility);
+        p.addPotionEffect(invisibility, true);
+
+        PlayerInvisibility playerInvisibility = match.getInvisibility().get(p);
+        if(playerInvisibility != null) playerInvisibility.cancelTask();
+
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(BedWarsPlugin.getInstance(), () -> {
             PlayerInvisibility playerInv = new PlayerInvisibility(match, p);

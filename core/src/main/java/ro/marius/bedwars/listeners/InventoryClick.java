@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import ro.marius.bedwars.game.Game;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
@@ -41,6 +42,10 @@ public class InventoryClick implements Listener {
         if (!(e.getView().getTopInventory().getHolder() instanceof UpgradeInventory)) {
             return;
         }
+
+        if (e.getClickedInventory() == null) return;
+
+        if (e.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
         AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(player.getUniqueId());
 
@@ -79,6 +84,10 @@ public class InventoryClick implements Listener {
         if (!(e.getView().getTopInventory().getHolder() instanceof ShopInventory)) {
             return;
         }
+
+        if (e.getClickedInventory() == null) return;
+
+        if (e.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
         ShopInventory shopInventory = (ShopInventory) e.getView().getTopInventory().getHolder();
         AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(player.getUniqueId());
@@ -170,6 +179,10 @@ public class InventoryClick implements Listener {
         if (!(e.getView().getTopInventory().getHolder() instanceof QuickBuyInventory)) {
             return;
         }
+
+        if (e.getClickedInventory() == null) return;
+
+        if (e.getClickedInventory().getType() == InventoryType.PLAYER) return;
 
         AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(player.getUniqueId());
 
