@@ -35,7 +35,7 @@ public class PlayerPlaceTNT implements Listener {
         tnt.setMetadata("Owner", new FixedMetadataValue(BedWarsPlugin.getInstance(), p.getName()));
         tnt.setFuseTicks(40);
         e.setCancelled(true);
-        Utils.removeItemInHand(p);
+        Utils.decreaseItemAmountFromHand(p);
         match.getMatchEntity().add(tnt);
     }
 

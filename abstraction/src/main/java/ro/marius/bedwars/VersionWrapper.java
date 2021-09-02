@@ -77,9 +77,9 @@ public interface VersionWrapper {
 
     String getNBTTag(ItemStack item, String tag);
 
-    void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket);
+    void sendHideEquipmentPacket(Player player, Set<Player> playersToSendPacket);
 
-    void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket);
+    void sendShowEquipmentPacket(Player player, Set<Player> playersToSendPacket);
 
     Villager spawnVillager(Location location);
 

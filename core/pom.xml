@@ -142,12 +142,6 @@
         </dependency>
         <dependency>
             <groupId>ro.marius</groupId>
-            <artifactId>v1_16_R1</artifactId>
-            <version>1.5.8</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>ro.marius</groupId>
             <artifactId>v1_16_R3</artifactId>
             <version>1.5.8</version>
             <scope>compile</scope>

@@ -17,12 +17,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.Bed;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
 import ro.marius.bedwars.irongolem.I_V_1_8_R3;
 import ro.marius.bedwars.shopkeepers.*;
 import ro.marius.bedwars.utils.ReflectionUtils;
@@ -166,25 +163,25 @@ public class v1_8_R3 implements VersionWrapper {
     }
 
     @Override
-    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendHideEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
         PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
-                1,
+                4,
                 null
         );
         PacketPlayOutEntityEquipment packetChestplate = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
-                2,
+                3,
                 null
         );
         PacketPlayOutEntityEquipment packetLeggings = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
-                3,
+                2,
                 null
         );
         PacketPlayOutEntityEquipment packetBoots = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
-                4,
+                1,
                 null
         );
 
@@ -198,7 +195,7 @@ public class v1_8_R3 implements VersionWrapper {
     }
 
     @Override
-    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendShowEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
         PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 1,

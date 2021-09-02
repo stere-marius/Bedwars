@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class PAPIExtension extends PlaceholderExpansion {
 
-    private Set<String> arenaType;
+    private final Set<String> arenaType;
 
     public PAPIExtension() {
         this.arenaType = ManagerHandler.getGameManager().getArenaType();

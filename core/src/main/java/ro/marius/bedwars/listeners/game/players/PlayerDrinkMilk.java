@@ -29,7 +29,7 @@ public class PlayerDrinkMilk implements Listener {
         }
 
         match.addToPreventMap(p.getUniqueId());
-        Utils.removeItemInHand(p);
+        Utils.decreaseItemAmountFromHand(p);
         e.setItem(null);
         e.setCancelled(true);
     }

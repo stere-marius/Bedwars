@@ -235,7 +235,7 @@ public class v1_16_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendHideEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
         List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack>> items = new ArrayList<>();
         Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairHead = new Pair<>(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(null));
         Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairChest = new Pair<>(EnumItemSlot.CHEST, CraftItemStack.asNMSCopy(null));
@@ -252,7 +252,7 @@ public class v1_16_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendShowEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
         List<Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack>> items = new ArrayList<>();
         Pair<EnumItemSlot, net.minecraft.server.v1_16_R1.ItemStack> pairHead =
                 new Pair<>(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(player.getInventory().getHelmet()));

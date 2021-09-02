@@ -256,7 +256,7 @@ public class Utils {
     }
 
     @SuppressWarnings("deprecation")
-    public static void removeItemInHand(Player p) {
+    public static void decreaseItemAmountFromHand(Player p) {
 
         if (p.getItemInHand().getAmount() > 1) {
             p.getItemInHand().setAmount(p.getItemInHand().getAmount() - 1);
@@ -264,6 +264,67 @@ public class Utils {
         }
 
         p.setItemInHand(null);
+    }
+
+    public static void decreaseItemAmountFromHand(Player p, ItemStack itemToRemove) {
+        boolean canUseBothHands = SERVER_VERSION.getID() >= ServerVersion.v1_9_R1
+                .getID();
+
+        if (itemToRemove == null) {
+
+            if (canUseBothHands) {
+                p.getInventory().setItemInMainHand(null);
+                return;
+            }
+
+            p.getInventory().setItemInHand(null);
+            return;
+        }
+
+        if (!canUseBothHands) {
+
+            ItemStack itemFromHand = p.getInventory().getItemInHand();
+
+            if (itemFromHand.getAmount() > 1) {
+                itemFromHand.setAmount(itemFromHand.getAmount() - 1);
+                return;
+            }
+
+            p.getInventory().setItemInHand(null);
+            return;
+        }
+
+        ItemStack itemFromMainHand = p.getInventory().getItemInMainHand();
+        boolean isItemInMainHand = itemFromMainHand.isSimilar(itemToRemove);
+
+        if (isItemInMainHand) {
+
+            if (itemFromMainHand.getAmount() > 1) {
+                itemFromMainHand.setAmount(itemFromMainHand.getAmount() - 1);
+                return;
+            }
+
+            p.getInventory().setItemInMainHand(null);
+
+            return;
+        }
+
+        ItemStack itemFromOffHand = p.getInventory().getItemInOffHand();
+        boolean isItemInOffHand = itemFromOffHand.isSimilar(itemToRemove);
+
+
+        if (isItemInOffHand) {
+
+            if (itemFromOffHand.getAmount() > 1) {
+                itemFromOffHand.setAmount(itemFromOffHand.getAmount() - 1);
+                return;
+            }
+
+            p.getInventory().setItemInOffHand(null);
+
+        }
+
+
     }
 
     public static int getArmorID(String armorType) {

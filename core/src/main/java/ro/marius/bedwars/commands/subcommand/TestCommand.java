@@ -375,19 +375,6 @@ public class TestCommand implements ISubCommand {
             return;
         }
 
-
-        if("drinkPotion".equalsIgnoreCase(args[1])) {
-
-            ItemStack itemStack = new ItemStack(Material.AIR);
-            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 1);
-            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 2);
-            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 3);
-            ManagerHandler.getVersionManager().getVersionWrapper().sendPacketEquipment(p, p, itemStack, 4);
-            p.sendMessage("DONE");
-
-            return;
-        }
-
     }
 
 }

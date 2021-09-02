@@ -36,25 +36,54 @@ public class PlayerInvisibility {
     }
 
     public void putInvisibility() {
-        ItemStack itemStack = new ItemStack(Material.AIR);
+        ManagerHandler.getVersionManager().getVersionWrapper().sendHideEquipmentPacket(player, this.match.getPlayers());
+        hidePlayerNameTag();
+    }
 
-        VersionWrapper version = ManagerHandler.getVersionManager().getVersionWrapper();
-        String text = this.team.getLetter() + this.team.getName();
+
+    public void undoInvisibility() {
+        ManagerHandler.getVersionManager().getVersionWrapper().sendShowEquipmentPacket(player, this.match.getPlayers());
+        showPlayerNameTag();
+    }
+
+    public void showPlayerNameTag() {
+        String scoreboardTeamName = getScoreboardTeamName();
         String playerName = this.player.getName();
 
         for (Player gamePlayer : this.match.getPlayers()) {
 
-            version.sendPacketEquipment(this.player, gamePlayer, itemStack, 1);
-            version.sendPacketEquipment(this.player, gamePlayer, itemStack, 2);
-            version.sendPacketEquipment(this.player, gamePlayer, itemStack, 3);
-            version.sendPacketEquipment(this.player, gamePlayer, itemStack, 4);
             Scoreboard sc = ManagerHandler.getScoreboardManager().scoreboard.get(gamePlayer.getUniqueId()).getScoreboard();
 
             if (sc == null) {
                 continue;
             }
 
-            org.bukkit.scoreboard.Team iTeam = sc.getTeam(text + "I");
+            org.bukkit.scoreboard.Team iTeam = sc.getTeam(scoreboardTeamName + "I");
+
+            if ((iTeam != null) && iTeam.getEntries().contains(playerName)) {
+                iTeam.removeEntry(playerName);
+            }
+
+            org.bukkit.scoreboard.Team nTeam = sc.getTeam(scoreboardTeamName);
+
+            if ((nTeam != null) && !nTeam.getEntries().contains(playerName)) {
+                nTeam.addEntry(playerName);
+            }
+        }
+    }
+
+    public void hidePlayerNameTag() {
+        String scoreboardTeamName = getScoreboardTeamName();
+        String playerName = this.player.getName();
+        for (Player gamePlayer : this.match.getPlayers()) {
+
+            Scoreboard sc = ManagerHandler.getScoreboardManager().scoreboard.get(gamePlayer.getUniqueId()).getScoreboard();
+
+            if (sc == null) {
+                continue;
+            }
+
+            org.bukkit.scoreboard.Team iTeam = sc.getTeam(scoreboardTeamName + "I");
 
             if (iTeam == null) {
                 continue;
@@ -67,48 +96,10 @@ public class PlayerInvisibility {
             iTeam.addEntry(playerName);
 
         }
-
     }
 
-    public void undoInvisibility() {
-
-        VersionWrapper version = ManagerHandler.getVersionManager().getVersionWrapper();
-        String text = this.team.getLetter() + this.team.getName();
-        String playerName = this.player.getName();
-
-        for (Player gamePlayer : this.match.getPlayers()) {
-
-            version.sendPacketEquipment(this.player, gamePlayer, this.helmet, 4);
-            version.sendPacketEquipment(this.player, gamePlayer, this.chestplate, 3);
-            version.sendPacketEquipment(this.player, gamePlayer, this.leggings, 2);
-            version.sendPacketEquipment(this.player, gamePlayer, this.boots, 1);
-
-            Scoreboard sc = ManagerHandler.getScoreboardManager().scoreboard.get(gamePlayer.getUniqueId()).getScoreboard();
-
-            if (sc == null) {
-                continue;
-            }
-
-            org.bukkit.scoreboard.Team iTeam = sc.getTeam(text + "I");
-
-            if ((iTeam != null) && iTeam.getEntries().contains(playerName)) {
-                iTeam.removeEntry(playerName);
-            }
-
-            org.bukkit.scoreboard.Team nTeam = sc.getTeam(text);
-
-            if ((nTeam != null) && !nTeam.getEntries().contains(playerName)) {
-                nTeam.addEntry(playerName);
-            }
-        }
-
-        PlayerInventory pInv = this.player.getInventory();
-
-        pInv.setHelmet(this.helmet);
-        pInv.setChestplate(this.chestplate);
-        pInv.setLeggings(this.leggings);
-        pInv.setBoots(this.boots);
-
+    public String getScoreboardTeamName(){
+        return this.team.getLetter() + this.team.getName();
     }
 
     public void runTaskRemove() {

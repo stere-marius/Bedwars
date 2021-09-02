@@ -1,23 +1,20 @@
 package ro.marius.bedwars.listeners.game.players;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.match.MatchState;
+import ro.marius.bedwars.utils.Utils;
 
 public class PlayerPlaceBucket implements Listener {
-
-    private final BlockFace[] FACES = new BlockFace[]{
-
-            BlockFace.NORTH_EAST, BlockFace.SOUTH_EAST, BlockFace.NORTH_WEST, BlockFace.SOUTH_WEST, BlockFace.NORTH,
-            BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST
-
-    };
 
     @EventHandler
     public void onPlaceWater(PlayerBucketEmptyEvent e) {
@@ -32,33 +29,8 @@ public class PlayerPlaceBucket implements Listener {
             return;
         }
 
-        for (BlockFace face : this.FACES) {
-            for (int i = 0; i < 3; i++) {
-                Block block = b.getRelative(face, i);
-                if (block.isLiquid()) {
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-        }
-
+        Bukkit.getScheduler().runTask(BedWarsPlugin.getInstance(), () -> Utils.decreaseItemAmountFromHand(p, e.getItemStack()));
         match.getPlacedBlocks().add(b);
     }
-
-//	@EventHandler
-//	public void onFillWater(PlayerBucketFillEvent e) {
-//		Player p = e.getPlayer();
-//		Block b = e.getBlockClicked();
-//		Game game = GameManager.getManager().getPlayers().get(p);
-//
-//		if (game == null)
-//			return;
-//		if (game.getGameState() == GameState.IN_WAITING)
-//			return;
-//
-//		if (game.getBuckets().contains(b)) {
-//			game.getBuckets().remove(b);
-//		}
-//	}
 
 }

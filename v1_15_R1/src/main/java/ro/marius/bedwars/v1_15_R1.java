@@ -232,7 +232,7 @@ public class v1_15_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendHideEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendHideEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
 
         PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
@@ -265,7 +265,7 @@ public class v1_15_R1 implements VersionWrapper {
     }
 
     @Override
-    public void sendShowEquipmentPacket(Player player, List<Player> playersToSendPacket) {
+    public void sendShowEquipmentPacket(Player player, Set<Player> playersToSendPacket) {
         PacketPlayOutEntityEquipment packetHelmet = new PacketPlayOutEntityEquipment(
                 ((CraftPlayer) player).getHandle().getBukkitEntity().getEntityId(),
                 EnumItemSlot.HEAD,

@@ -68,7 +68,7 @@ public class PlayerSpawnEntity implements Listener {
         Snowball snowball = p.launchProjectile(Snowball.class);
         snowball.setMetadata("Icefish", new FixedMetadataValue(BedWarsPlugin.getInstance(), team));
         snowball.setMetadata("Match", new FixedMetadataValue(BedWarsPlugin.getInstance(), match));
-        Utils.removeItemInHand(p);
+        Utils.decreaseItemAmountFromHand(p);
         e.setCancelled(true);
     }
 

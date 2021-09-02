@@ -13,6 +13,7 @@ import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.utils.ServerVersion;
+import ro.marius.bedwars.utils.Utils;
 import ro.marius.bedwars.utils.XMaterial;
 
 public class PlayerInteractFireball implements Listener {
@@ -60,25 +61,7 @@ public class PlayerInteractFireball implements Listener {
             return;
         }
 
-        boolean isVersionHigh = ManagerHandler.getVersionManager().getServerVersion().getID() >= ServerVersion.v1_9_R1
-                .getID();
-        e.setCancelled(true);
-
-        if (isVersionHigh) {
-
-            if (p.getInventory().getItemInMainHand().isSimilar(e.getItem())) {
-                p.getInventory().setItemInMainHand(null);
-                return;
-            }
-
-            if (p.getInventory().getItemInOffHand().isSimilar(e.getItem())) {
-                p.getInventory().setItemInOffHand(null);
-                return;
-            }
-
-        }
-
-        p.getInventory().setItemInHand(null);
+        Utils.decreaseItemAmountFromHand(p, e.getItem());
         e.setCancelled(true);
     }
 

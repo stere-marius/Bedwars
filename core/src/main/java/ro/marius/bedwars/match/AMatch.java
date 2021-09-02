@@ -420,13 +420,13 @@ public abstract class AMatch {
     }
 
     public void sendMessage(String message) {
-        String finalMessage = Utils.translate(message);
+        String translatedMessage = Utils.translate(message);
 
         Set<Player> playersToSend = new HashSet<>();
         playersToSend.addAll(this.getPlayers());
         playersToSend.addAll(this.getSpectators());
 
-        playersToSend.forEach(p -> p.sendMessage(finalMessage));
+        playersToSend.forEach(p -> p.sendMessage(translatedMessage));
     }
 
     public void sendMessage(List<String> list) {
