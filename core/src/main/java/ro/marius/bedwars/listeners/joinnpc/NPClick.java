@@ -15,11 +15,11 @@ public class NPClick implements Listener {
         Player p = e.getPlayer();
         Entity entity = e.getRightClicked();
 
-        if (!entity.hasMetadata("BedwarsNPC")) {
+        if (!entity.hasMetadata("NPCPlayer")) {
             return;
         }
 
-        String arenaType = entity.getMetadata("BedwarsNPC").get(0).asString();
+        String arenaType = entity.getMetadata("NPCPlayer").get(0).asString();
         p.openInventory(new JoinInventory(arenaType).getInventory());
     }
 

@@ -138,16 +138,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if (args[0].equalsIgnoreCase("configurationSection")) {
-
-
-            for (String key : ManagerHandler.getGameManager().game.getConfigurationSection("Games.arena1").getKeys(true)) {
-                Bukkit.getConsoleSender().sendMessage(key);
-            }
-
-
-            return;
-        }
 
         if ("setShopKeeperSkin".equalsIgnoreCase(args[0])) {
 
@@ -199,6 +189,20 @@ public class BedwarsCommand extends AbstractCommand {
 
         if ("closeInventory".equalsIgnoreCase(args[0])) {
             p.closeInventory();
+            return;
+        }
+
+        if (args[0].equalsIgnoreCase("spawnNPC")) {
+
+            NPCPlayer npcPlayer = ManagerHandler.getVersionManager().getNewNPC();
+            npcPlayer.spawnNPC(p.getLocation(), new NPCSkin("eyJ0aW1lc3RhbXAiOjE1Njg1NjQzMTk3ODgsInByb2ZpbGVJZCI6ImMxYWYxODI5MDYwZTQ0OGRhNjYwOWRmZGM2OGEzOWE4IiwicHJvZmlsZU5hbWUiOiJCQVJLeDQiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzU1NTlkZmU4ZGJhNWM4ODlkMDE2MTJhNTMxYjhkNDY5YzBmMzE3ZDk3OTcxOTA4ZWZiNjNhYTk0MzE1Yzg3YjkiLCJtZXRhZGF0YSI6eyJtb2RlbCI6InNsaW0ifX19fQ==",
+                    "mH5lrRm89N5X65cG2bSC6ukfERdmM1Es1Z2a4JXzJD+42nljSys3QVYmgzZeFgq660fRWyn7zPZQBP/iNQSWb3t1Qx4nVwiMvDSGeEjO80LRIvMJRv4zKPJh2HCJ1a8POkDS0kytYIZ2OhcTnYfHrWHBHJlk9e8tjJIgu9EOtCR3FJVyuUVZpcXF7u65mRiSp5xlAGiGLVVC9LPIUe0suvkRDEGDOWiFKjMGH403RDMb4Qn4vvyXpY2K7T8IA9jB9JwahdXk0or3Oz7DGhMPPDBe3gktN1XJFn3UkaBMLjiM4tksHIvCi/AqadFr4bN9PpKdKUde+L4Q/w64l49hkTbfL2DK5XgSBqcCfMRT2gqm4T6xkeANMafF7vIVyOHoP+FARZR9FHv0ER9yhhEVOvihtLpND2+pUau2a+gxbtpPhFDp42rV5mxH5rS2uiNLrfNVqEI4Q8wBXbt03J8aLerVbF8uVzkLrfy7qpgUJk1Lw4luKqELApf/c5nBRpPyu2h2RzKTWbf6wDHWPMhyzohmGWQSsvL3rkJl2QkOQH1+FUSI3rQ4we3mA9RyWHQEB0BwbNValreHxU0n5a4KYTJS5e0y2wt+63xTgMURxbWsNvPezTghvFOWK3zP+is/NKJcdNad046fnHk3DCNpCDO/naYHhmK0ei+icdlTsf8="));
+            npcPlayer.getViewers().add(p);
+            npcPlayer.hideName();
+            npcPlayer.sendSpawnPackets(new HashSet<>(Collections.singletonList(p)));
+            Bukkit.getScheduler().scheduleSyncDelayedTask(BedWarsPlugin.getInstance(), npcPlayer::removeFromTablist, 20);
+            p.sendMessage("Spawned");
+
             return;
         }
 

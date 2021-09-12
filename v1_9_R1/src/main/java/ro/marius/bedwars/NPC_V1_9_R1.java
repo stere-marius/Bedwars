@@ -1,19 +1,20 @@
 package ro.marius.bedwars;
 
-
 import com.mojang.authlib.properties.Property;
-import net.minecraft.server.v1_8_R3.*;
-
+import net.minecraft.server.v1_9_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.*;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import ro.marius.bedwars.utils.ReflectionUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
-public class NPC_V1_8_R3 extends NPCPlayer {
+public class NPC_V1_9_R1 extends NPCPlayer {
 
     private EntityPlayer entityPlayer;
 
@@ -96,7 +97,7 @@ public class NPC_V1_8_R3 extends NPCPlayer {
         ReflectionUtils.setFieldValue("c", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, "prefix");
         ReflectionUtils.setFieldValue("d", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, "suffix");
         ReflectionUtils.setFieldValue("e", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, ScoreboardTeamBase.EnumNameTagVisibility.NEVER.e);
-        ReflectionUtils.setFieldValue("g", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, gameProfile);
+        ReflectionUtils.setFieldValue("h", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, gameProfile);
 
         for (Player player : getViewers()) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutScoreboardTeam);
@@ -107,5 +108,4 @@ public class NPC_V1_8_R3 extends NPCPlayer {
     public int getEntityID(){
         return entityPlayer.getId();
     }
-
 }

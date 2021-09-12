@@ -50,7 +50,7 @@ public class NPCManager {
         npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
         npc.spawn(location);
         Entity npcEntity = npc.getEntity();
-        npcEntity.setMetadata("BedwarsNPC", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
+        npcEntity.setMetadata("NPCPlayer", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
 
         if (npcEntity instanceof SkinnableEntity) {
             ((SkinnableEntity) npcEntity).setSkinName(skinName);
@@ -130,7 +130,7 @@ public class NPCManager {
             return;
         }
 
-        npcEntity.setMetadata("BedwarsNPC", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
+        npcEntity.setMetadata("NPCPlayer", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
 
         if (npcEntity instanceof SkinnableEntity) {
             ((SkinnableEntity) npcEntity).setSkinName(skinName);

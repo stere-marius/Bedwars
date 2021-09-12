@@ -17,11 +17,11 @@ public class RespawnTask {
     private int time = 5;
     private AMatch match;
 
-    private boolean send;
+    private final boolean send;
     private String title;
-    private String subTitle;
-    private int fadeIn;
-    private int fadeOut;
+    private final String subTitle;
+    private final int fadeIn;
+    private final int fadeOut;
 
     private BukkitTask task;
 
@@ -139,44 +139,12 @@ public class RespawnTask {
         this.match = match;
     }
 
-    public boolean isSend() {
-        return this.send;
-    }
-
-    public void setSend(boolean send) {
-        this.send = send;
-    }
-
     public String getTitle() {
         return this.title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubTitle() {
-        return this.subTitle;
-    }
-
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    public int getFadeIn() {
-        return this.fadeIn;
-    }
-
-    public void setFadeIn(int fadeIn) {
-        this.fadeIn = fadeIn;
-    }
-
-    public int getFadeOut() {
-        return this.fadeOut;
-    }
-
-    public void setFadeOut(int fadeOut) {
-        this.fadeOut = fadeOut;
     }
 
     public BukkitTask getTask() {
