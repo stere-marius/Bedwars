@@ -17,9 +17,9 @@ import java.util.Map.Entry;
 
 public class JoinInventory extends ExtraInventory {
 
-    private final static int SIZE = GUIStructure.getInventorySize("Menu.JoinNPC");
-    private final static String MENU_NAME = GUIStructure.getConfig().getString("Menu.JoinNPC.InventoryName");
-    private final static Map<Integer, GUIItem> ITEMS = GUIStructure.readInventory("Menu.JoinNPC");
+    private final static int SIZE = GUIStructure.getInventorySize("Menu.BedwarsJoinNPC");
+    private final static String MENU_NAME = GUIStructure.getConfig().getString("Menu.BedwarsJoinNPC.InventoryName");
+    private final static Map<Integer, GUIItem> ITEMS = GUIStructure.readInventory("Menu.BedwarsJoinNPC");
     private final String arenaType;
     private final String arenaTypeFirstUpper;
 

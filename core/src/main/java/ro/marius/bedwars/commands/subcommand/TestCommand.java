@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +32,9 @@ import java.util.*;
 public class TestCommand implements ISubCommand {
 
     private final String insfArgs = Utils.translate("&e⇨ Insufficent arguments: /bedwars");
-    private final Set<UUID> allowedPlayers = new HashSet<>();
+    private final Set<UUID> allowedPlayers = new HashSet<>(Arrays.asList(
+            UUID.fromString("2d37a3a1-ac8e-4392-89b5-3a383fc0f455"),
+            UUID.fromString("af2a009d-c286-4947-b989-9348a767d081")));
 
     private Location positionOne, positionTwo;
     private CuboidSelection selection;
@@ -45,7 +49,7 @@ public class TestCommand implements ISubCommand {
         Player p = (Player) sender;
 
         if (!p.isOp()
-                && !("rmellis".equals(p.getName()) || "ChucklesM8".equals(p.getName()) || "SKWOW".equals(p.getName()))) {
+                && !("rmellis".equals(p.getName()) || "TripleZone".equals(p.getName()) || "SMarius99".equals(p.getName()))) {
             return;
         }
 
@@ -76,6 +80,28 @@ public class TestCommand implements ISubCommand {
                 p.sendMessage(Utils.translate("&a>> The selection has been successfully instantiated."));
             }
 
+            return;
+        }
+
+        if ("getNearStands".equalsIgnoreCase(args[1])) {
+            Collection<Entity> armorStandList = p.getLocation().getWorld().getNearbyEntities(p.getLocation(), 10, 10, 10,
+                    e -> e instanceof ArmorStand);
+            p.sendMessage("There are " + armorStandList.size());
+            return;
+        }
+
+        if ("removeNearHolograms".equalsIgnoreCase(args[1])) {
+            Collection<Entity> armorStandList = p.getLocation().getWorld().getNearbyEntities(p.getLocation(), 10, 10, 10,
+                    e -> e instanceof ArmorStand);
+            armorStandList.forEach(Entity::remove);
+            p.sendMessage("I removed " + armorStandList.size() + " holograms");
+            return;
+        }
+
+        if ("getAllStands".equalsIgnoreCase(args[2])) {
+            Set<ArmorStand> armorStands = new HashSet<>();
+            ManagerHandler.getNPCManager().getArenaTypeNpc().values().forEach(c -> c.forEach(npcArena -> armorStands.addAll(npcArena.getNpcHologram().getHologramList())));
+            p.sendMessage("There are " + armorStands.size());
             return;
         }
 

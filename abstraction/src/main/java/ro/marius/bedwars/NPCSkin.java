@@ -17,4 +17,12 @@ public class NPCSkin {
     public String getSignature() {
         return signature;
     }
+
+    @Override
+    public String toString() {
+        return "NPCSkin{" +
+                "value='" + value + '\'' +
+                ", signature='" + signature + '\'' +
+                '}';
+    }
 }

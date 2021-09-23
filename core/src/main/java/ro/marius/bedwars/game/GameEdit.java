@@ -189,7 +189,6 @@ public class GameEdit {
     }
 
     private void changeLocationsWorld(World world) {
-        Bukkit.getConsoleSender().sendMessage(Utils.translate("&a&lChanging the locations to " + world.getName()));
         List<Location> locations = new ArrayList<>();
         locations.addAll(game.getDiamondGeneratorLocation());
         locations.addAll(game.getEmeraldGeneratorLocation());

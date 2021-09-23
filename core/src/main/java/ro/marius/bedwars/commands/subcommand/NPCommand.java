@@ -4,19 +4,25 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.ISubCommand;
+import ro.marius.bedwars.NPCPlayer;
+import ro.marius.bedwars.NPCSkin;
 import ro.marius.bedwars.game.mechanics.NPCArena;
 import ro.marius.bedwars.manager.ManagerHandler;
+import ro.marius.bedwars.manager.factory.BedwarsNPCFactory;
+import ro.marius.bedwars.npc.BedwarsJoinNPC;
+import ro.marius.bedwars.npc.SkinFetcher;
+import ro.marius.bedwars.npc.SkinFetcherCallback;
+import ro.marius.bedwars.npc.bedwars.BedwarsNPC;
 import ro.marius.bedwars.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 public class NPCommand implements ISubCommand {
 
@@ -30,6 +36,7 @@ public class NPCommand implements ISubCommand {
             p.sendMessage(Utils.translate("&e-----------------------------------------------"));
             p.sendMessage(Utils.translate(
                     "&e⇨ /bedwars joinNPC spawn <arenaType> <skinName> <firstLine>;<secondLine>;<thirdLine>..."));
+            p.sendMessage(Utils.translate("&e⇨ /bedwars joinNPC setSkin <UUID> <playerName>"));
             p.sendMessage(Utils.translate("&e⇨ /bedwars joinNPC list"));
             p.sendMessage("");
             p.sendMessage(Utils.translate("&e-----------------------------------------------"));
@@ -60,14 +67,16 @@ public class NPCommand implements ISubCommand {
 
             Collections.addAll(lines, split);
 
-            ManagerHandler.getNPCManager().spawnNPC(p.getLocation(), skinName, arenaType, lines, true);
+            int npcIndex = ManagerHandler.getNPCManager().getNewNpcID();
+            ManagerHandler.getNPCManager().spawnNPC(npcIndex, p.getLocation(), skinName, arenaType, lines);
+            ManagerHandler.getNPCManager().saveNPC(p.getLocation(), npcIndex, skinName, arenaType, lines);
 
             return;
         }
 
         if ("list".equalsIgnoreCase(args[1])) {
 
-            for (Entry<String, List<NPCArena>> entry : ManagerHandler.getNPCManager().getNpc().entrySet()) {
+            for (Entry<String, List<NPCArena>> entry : ManagerHandler.getNPCManager().getArenaTypeNpc().entrySet()) {
 
                 String arenaType = entry.getKey();
                 List<NPCArena> list = entry.getValue();
@@ -81,7 +90,7 @@ public class NPCommand implements ISubCommand {
 
                     index++;
 
-                    Location location = npcArena.getLocation();
+                    Location location = npcArena.getNpcHologram().getLocation();
 
                     TextComponent message = new TextComponent(Utils.translate("&e⇨ " + index + "."));
 
@@ -97,10 +106,36 @@ public class NPCommand implements ISubCommand {
                     remove.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                             new ComponentBuilder(Utils.translate("&aClick me to remove the NPC")).create()));
 
-                    p.spigot().sendMessage(message, teleport, remove);
+                    TextComponent npcSkin = new TextComponent(Utils.translate("   &c&lCHANGE SKIN   "));
+                    npcSkin.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,
+                            "/bedwars joinNPC setSkin " + npcArena.getUuid() + " playerName"));
+                    npcSkin.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            new ComponentBuilder(Utils.translate("&aClick me to write the command for changing the skin")).create()));
+
+                    p.spigot().sendMessage(message, teleport, remove, npcSkin);
                 }
 
             }
+
+            return;
+        }
+
+        if ("setSkin".equalsIgnoreCase(args[1])) {
+
+            if (args.length < 4) {
+                p.sendMessage(Utils.translate("&e⇨ Usage: /bedwars joinNPC setSkin <UUID> <playerName>"));
+                return;
+            }
+
+            UUID uuid = UUID.fromString(args[2]);
+            NPCArena npcArena = ManagerHandler.getNPCManager().getNPCByUUID(uuid);
+
+            p.sendMessage(Utils.translate("&aFetching the skin..."));
+
+            SkinFetcher.getSkinFromName(args[3], npcSkin -> {
+                ManagerHandler.getNPCManager().setSkin(npcArena.getIndex(), npcSkin);
+                p.sendMessage(Utils.translate("&aThe skin has been updated."));
+            });
 
             return;
         }
@@ -122,8 +157,9 @@ public class NPCommand implements ISubCommand {
             }
 
             npcArena.remove();
+            ManagerHandler.getNPCManager().removeNPC(npcArena.getIndex());
+            ManagerHandler.getNPCManager().despawnNPC(npcArena.getIndex());
             p.sendMessage(Utils.translate("&aThe NPC has been removed successfully."));
-
             return;
         }
 

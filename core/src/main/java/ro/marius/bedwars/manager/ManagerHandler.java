@@ -40,8 +40,7 @@ public class ManagerHandler {
         worldManager = new WorldManager();
         hologramManager = new HologramManager();
         socketManager = new SocketManager();
-
-        this.registerJoinNPC(plugin);
+        npcManager = new NPCManager();
     }
 
     public static void onDisable() {
@@ -49,18 +48,15 @@ public class ManagerHandler {
             npcManager.deleteNPC();
         }
 
-
-
         for (Game game : gameManager.getGames()) {
             AMatch match = game.getMatch();
             if (match.getMatchState() == MatchState.IN_WAITING) {
-                for (Player player : match.getPlayers()) {
-                    match.removePlayer(player);
-                }
+                match.getPlayers().forEach(match::removePlayer);
             } else {
                 match.endGame("RESTART");
             }
         }
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             APlayerData data = gameManager.getData(player);
             data.saveData();
@@ -112,24 +108,4 @@ public class ManagerHandler {
         return npcManager;
     }
 
-    public void registerJoinNPC(BedWarsPlugin plugin) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (Bukkit.getPluginManager().getPlugin("Citizens") == null) {
-                    Bukkit.getConsoleSender().sendMessage(
-                            ChatColor.RED + "[Bedwars] Could not load JoinNPC because Citizens plugin is missing.");
-                    return;
-                }
-                ManagerHandler.npcManager = new NPCManager();
-
-                PluginManager manager = plugin.getServer().getPluginManager();
-
-                manager.registerEvents(new NPClick(), plugin);
-                manager.registerEvents(new NPChunkListener(), plugin);
-
-                Bukkit.getConsoleSender().sendMessage(Utils.translate("&a[Bedwars] Enabled support for joining NPC"));
-            }
-        }.runTaskLater(BedWarsPlugin.getInstance(), 40L);
-    }
 }

@@ -14,6 +14,7 @@ import ro.marius.bedwars.listeners.game.spectators.*;
 import ro.marius.bedwars.listeners.playerdata.PlayerDataJoin;
 import ro.marius.bedwars.listeners.playerdata.PlayerDataQuit;
 import ro.marius.bedwars.listeners.waiting.*;
+import ro.marius.bedwars.npc.JoinNpcListener;
 import ro.marius.bedwars.utils.XMaterial;
 
 public class ListenerManager {
@@ -90,6 +91,7 @@ public class ListenerManager {
         manager.registerEvents(new PlayerDrinkMilk(), plugin);
         manager.registerEvents(new SpectatorToggleFly(), plugin);
         manager.registerEvents(new GameEditListener(), plugin);
+        manager.registerEvents(new JoinNpcListener(), plugin);
 
 //        if (!XMaterial.isNewVersion()) {
 //            manager.registerEvents(new PlayerDamageArmor(), plugin);

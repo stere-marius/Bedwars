@@ -80,8 +80,8 @@ public class BedWarsPlugin extends JavaPlugin {
         // wait until server loads with these things
         this.getServer().getScheduler().runTask(this, () -> {
             BedWarsPlugin.this.setupFAWE();
-            ManagerHandler.getGameManager().loadGames();
             ManagerHandler.getHologramManager().spawnPlayersHologram();
+            ManagerHandler.getGameManager().loadGames(() -> ManagerHandler.getNPCManager().loadNPCGameObservers());
         });
 
         // load arena types

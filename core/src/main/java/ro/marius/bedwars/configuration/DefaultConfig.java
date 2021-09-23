@@ -16,6 +16,7 @@ public class DefaultConfig {
         config.options().header("Official Documentation https://bitbucket.org/STRMarius/bedwarswiki/wiki/Home");
         config.options().copyHeader(true);
         config.addDefault("WorldAdapter", "NORMAL_ADAPTER");
+        config.addDefault("JoinArenaNpcAdapter", "BEDWARS");
         config.addDefault("FastAsyncWorldEdit", false);
         config.addDefault("onJoin.TeleportToLobbyLocation", false);
         config.addDefault("ShoutCommand.Name", "shout");

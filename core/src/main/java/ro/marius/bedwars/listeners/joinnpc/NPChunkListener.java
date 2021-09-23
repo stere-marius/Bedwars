@@ -38,7 +38,8 @@ public class NPChunkListener implements Listener {
         Chunk ch = e.getChunk();
 
         for (NPCArena npcArena : ManagerHandler.getNPCManager().getNPCList(ch)) {
-            npcArena.respawnStandList(ManagerHandler.getGameManager().getPlayersPlaying(npcArena.getArenaType()));
+            npcArena.getNpcHologram().despawnHolograms();
+            npcArena.getNpcHologram().spawnHolograms(ManagerHandler.getGameManager().getPlayersPlaying(npcArena.getArenaType()));
         }
 
     }

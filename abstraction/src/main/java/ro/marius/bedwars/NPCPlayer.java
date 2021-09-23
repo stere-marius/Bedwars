@@ -1,6 +1,8 @@
 package ro.marius.bedwars;
 
+import com.mojang.authlib.properties.Property;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -17,19 +19,24 @@ public abstract class NPCPlayer {
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
     protected GameProfile gameProfile = new GameProfile(uuid, name);
 
-    public abstract void spawnNPC(Location location, NPCSkin skin);
-
-    public abstract void spawnNPC(Location location);
-
-    public abstract void updateSkin(NPCSkin skin);
+    public abstract void createNPC(Location location, NPCSkin skin);
 
     public abstract void sendSpawnPackets(Set<Player> players);
 
-    public abstract void removeFromTablist();
+    public abstract void updateSkin(NPCSkin skin);
 
-    public abstract void hideName();
+    public abstract void sendPacketsRemoveTablist(Player player);
 
-    public abstract int getEntityID();
+    public abstract void sendPacketsHideName(Player player);
+
+    public abstract void remove();
+
+    public abstract Entity getBukkitEntity();
+
+    public void setSkin(NPCSkin skin) {
+        gameProfile.getProperties().get("textures").clear();
+        gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+    }
 
     public Set<Player> getViewers() {
         return viewers;

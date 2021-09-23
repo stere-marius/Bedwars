@@ -287,7 +287,7 @@ public class GameManager {
         }
     }
 
-    public void loadGames() {
+    public void loadGames(Runnable callbackLoadGames) {
 
         StringBuilder builder = new StringBuilder(ChatColor.GREEN + "Loaded games: ");
 
@@ -295,7 +295,9 @@ public class GameManager {
             return;
         }
 
-        for (String name : this.game.getConfigurationSection("Games").getKeys(false)) {
+        Set<String> configGameSet = this.game.getConfigurationSection("Games").getKeys(false);
+
+        for (String name : configGameSet) {
 
             this.gameNames.add(name);
 
@@ -400,26 +402,12 @@ public class GameManager {
                     game.setArenaOptions(GameManager.this.arenaOptions.get(optionsPath));
                     GameManager.this.loadStartingTime(game);
 
-//										game.getTeams().addAll(teams);
-
                     NormalMatch match = new NormalMatch(game);
                     loadMatchGenerators(match);
                     match.getTeams().addAll(teams);
 
                     game.setMatch(match);
 
-//										if (lobbyOne != null && lobbyTwo != null) {
-                    //
-//											CuboidSelection selection = new CuboidSelection(Utils.convertGameLocation(lobbyOne),
-//													Utils.convertGameLocation(lobbyTwo));
-//											selection.assignValues();
-//											selection.select();
-//											game.getSelections().put("LOBBY", selection);
-                    //
-//										}
-
-                    // game.loadChests();
-//										game.setTimeStartConfig(timeStart == null ? 15 : (int) timeStart);
                     ManagerHandler.getScoreboardManager().createPathScoreboard(game);
                     builder.append(game.getName()).append(" ");
 
@@ -461,6 +449,11 @@ public class GameManager {
                                         + " for game " + name + " .Setting it as being the default one."));
                     }
 
+                    if (games.size() == configGameSet.size()) {
+                        callbackLoadGames.run();
+                        Bukkit.getConsoleSender().sendMessage(Utils.translate(builder.toString()));
+                    }
+
                     for (Team t : game.getMatch().getTeams()) {
                         t.setIronFloorGenerator(new FloorGenerator(match, FloorGeneratorType.IRON,
                                 game.getUpgradePath().getIronAmount(), game.getUpgradePath().getIronTime(),
@@ -486,12 +479,11 @@ public class GameManager {
             });
         }
 
-        Bukkit.getConsoleSender().sendMessage(Utils.translate(builder.toString()));
     }
 
-    public void cloneGame(Game g, String newGame, CommandSender player) {
+    public void cloneGame(Game clonedGame, String newGameGame, CommandSender player) {
 
-        ManagerHandler.getWorldManager().cloneWorld(g.getName(), newGame, new WorldCallback() {
+        ManagerHandler.getWorldManager().cloneWorld(clonedGame.getName(), newGameGame, new WorldCallback() {
 
             @Override
             public void onComplete(World result, String[] message) {
@@ -500,34 +492,34 @@ public class GameManager {
                 List<String> letters = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                         "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z");
 
-                String upgradePath = g.getUpgradePathName();
-                String shopPath = g.getShopPathName();
+                String upgradePath = clonedGame.getUpgradePathName();
+                String shopPath = clonedGame.getShopPathName();
 
-                for (int i = 0; i < g.getTeams().size(); i++) {
+                for (int i = 0; i < clonedGame.getTeams().size(); i++) {
 
-                    Team teamName = g.getTeams().get(i);
+                    Team teamName = clonedGame.getTeams().get(i);
 
                     GameLocation bed = teamName.getBedLocation().clone();
                     bed.getLocation().setWorld(result);
-                    bed.setWorldName(newGame);
+                    bed.setWorldName(newGameGame);
                     GameLocation spawn = teamName.getSpawnLocation().clone();
                     spawn.getLocation().setWorld(result);
-                    spawn.setWorldName(newGame);
+                    spawn.setWorldName(newGameGame);
                     GameLocation ironGenerator = teamName.getIronGenerator().clone();
                     ironGenerator.getLocation().setWorld(result);
-                    ironGenerator.setWorldName(newGame);
+                    ironGenerator.setWorldName(newGameGame);
                     GameLocation goldGenerator = teamName.getGoldGenerator().clone();
                     goldGenerator.getLocation().setWorld(result);
-                    goldGenerator.setWorldName(newGame);
+                    goldGenerator.setWorldName(newGameGame);
                     GameLocation emeraldGenerator = teamName.getEmeraldGenerator().clone();
                     emeraldGenerator.getLocation().setWorld(result);
-                    emeraldGenerator.setWorldName(newGame);
+                    emeraldGenerator.setWorldName(newGameGame);
                     GameLocation shopLocation = teamName.getShopLocation().clone();
                     shopLocation.getLocation().setWorld(result);
-                    shopLocation.setWorldName(newGame);
+                    shopLocation.setWorldName(newGameGame);
                     GameLocation upgradeLocation = teamName.getUpgradeLocation().clone();
                     upgradeLocation.getLocation().setWorld(result);
-                    upgradeLocation.setWorldName(newGame);
+                    upgradeLocation.setWorldName(newGameGame);
 
                     Team team = new Team(teamName.getName(), (i > (letters.size() - 1)) ? letters.get(0) : letters.get(i),
                             teamName.getTeamColor().name(), teamName.getBedFace(), bed, spawn, goldGenerator,
@@ -537,31 +529,37 @@ public class GameManager {
 
                 }
 
-                CuboidSelection selection = g.getGameCuboid().clone();
+                CuboidSelection selection = clonedGame.getGameCuboid().clone();
                 selection.getPositionOne().setWorld(result);
                 selection.getPositionTwo().setWorld(result);
                 selection.assignValues();
 
-                GameLocation spectateLocation = g.getSpectateLocation().clone();
+                GameLocation spectateLocation = clonedGame.getSpectateLocation().clone();
                 spectateLocation.getLocation().setWorld(result);
-                spectateLocation.setWorldName(newGame);
-                GameLocation waitingLocation = g.getWaitingLocation().clone();
+                spectateLocation.setWorldName(newGameGame);
+                GameLocation waitingLocation = clonedGame.getWaitingLocation().clone();
                 waitingLocation.getLocation().setWorld(result);
-                waitingLocation.setWorldName(newGame);
+                waitingLocation.setWorldName(newGameGame);
 
-                List<GameLocation> diamondGenerator = new ArrayList<>(g.getDiamondGenerator());
-                List<GameLocation> emeraldGenerator = new ArrayList<>(g.getEmeraldGenerator());
+                List<GameLocation> diamondGenerator = new ArrayList<>();
+                List<GameLocation> emeraldGenerator = new ArrayList<>();
 
-                for (GameLocation gameLocation : diamondGenerator) {
-                    gameLocation.setWorldName(newGame).getLocation().setWorld(result);
+                for (GameLocation gameLocation : clonedGame.getDiamondGenerator()) {
+                    GameLocation clonedGeneratorLocation = gameLocation.clone();
+                    clonedGeneratorLocation.setWorld(result);
+                    clonedGeneratorLocation.setWorldName(result.getName());
+                    diamondGenerator.add(clonedGeneratorLocation);
                 }
 
-                for (GameLocation gameLocation : emeraldGenerator) {
-                    gameLocation.setWorldName(newGame).getLocation().setWorld(result);
+                for (GameLocation gameLocation : clonedGame.getEmeraldGenerator()) {
+                    GameLocation clonedGeneratorLocation = gameLocation.clone();
+                    clonedGeneratorLocation.setWorld(result);
+                    clonedGeneratorLocation.setWorldName(result.getName());
+                    emeraldGenerator.add(clonedGeneratorLocation);
                 }
 
-                Game game = new Game(newGame, g.getScoreboardPath(), g.getArenaType(), spectateLocation,
-                        waitingLocation, selection, g.getPlayersPerTeam(), g.getMinTeamsToStart(), g.getMaxPlayers(), teams,
+                Game game = new Game(newGameGame, clonedGame.getScoreboardPath(), clonedGame.getArenaType(), spectateLocation,
+                        waitingLocation, selection, clonedGame.getPlayersPerTeam(), clonedGame.getMinTeamsToStart(), clonedGame.getMaxPlayers(), teams,
                         diamondGenerator, emeraldGenerator);
 
                 game.setShopPathName(shopPath);
@@ -572,11 +570,11 @@ public class GameManager {
 
                 teams.forEach(t -> t.setUpgrades(game.getUpgradePath().getUpgrades()));
 
-                String path = "Games." + newGame + ".";
+                String path = "Games." + newGameGame + ".";
                 FileConfiguration config = ManagerHandler.getGameManager().game;
 
-                config.set("Games." + newGame, null);
-                config.set(path + ".ArenaType", g.getArenaType());
+                config.set("Games." + newGameGame, null);
+                config.set(path + ".ArenaType", clonedGame.getArenaType());
                 config.set(path + ".UpgradePath", upgradePath);
                 config.set(path + ".ShopPath", shopPath);
                 config.set(path + ".ScoreboardPath", game.getScoreboardPath());

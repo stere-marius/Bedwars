@@ -71,32 +71,32 @@ public class GUIStructure {
         config.addDefault(arenaMenuPath + ".PreviousPage.Glowing", false);
         config.addDefault(arenaMenuPath + ".PreviousPage.Lore", Collections.singletonList(""));
 
-        config.addDefault("Menu.JoinNPC.Size", 36);
-        config.addDefault("Menu.JoinNPC.InventoryName", "&8Play Bed Wars");
+        config.addDefault("Menu.BedwarsJoinNPC.Size", 36);
+        config.addDefault("Menu.BedwarsJoinNPC.InventoryName", "&8Play Bed Wars");
 
         if (!FILE.exists()) {
-            config.addDefault("Menu.JoinNPC.Contents.BED.Slot", 12);
-            config.addDefault("Menu.JoinNPC.Contents.BED.Material", "BED");
-            config.addDefault("Menu.JoinNPC.Contents.BED.DisplayName", "&aBed Wars <arenaTypeFirstLetterUppercase>");
-            config.addDefault("Menu.JoinNPC.Contents.BED.Lore",
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.BED.Slot", 12);
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.BED.Material", "BED");
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.BED.DisplayName", "&aBed Wars <arenaTypeFirstLetterUppercase>");
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.BED.Lore",
                     Arrays.asList("&7Play Bed Wars <arenaTypeFirstLetterUppercase>", "", "&eClick to play!"));
-            config.addDefault("Menu.JoinNPC.Contents.BED.PlayerCommands",
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.BED.PlayerCommands",
                     Collections.singletonList("bedwars randomJoin <arenaType>"));
 
-            config.addDefault("Menu.JoinNPC.Contents.MAP_SELECTOR.Slot", 14);
-            config.addDefault("Menu.JoinNPC.Contents.MAP_SELECTOR.Material", "SIGN");
-            config.addDefault("Menu.JoinNPC.Contents.MAP_SELECTOR.DisplayName",
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.MAP_SELECTOR.Slot", 14);
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.MAP_SELECTOR.Material", "SIGN");
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.MAP_SELECTOR.DisplayName",
                     "&aMap Selector (<arenaTypeFirstLetterUppercase>)");
-            config.addDefault("Menu.JoinNPC.Contents.MAP_SELECTOR.Lore",
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.MAP_SELECTOR.Lore",
                     Arrays.asList("&7Pick which map you want to play", "&7from a list of available servers.", "",
                             "&eClick to browse"));
-            config.addDefault("Menu.JoinNPC.Contents.MAP_SELECTOR.PlayerCommands",
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.MAP_SELECTOR.PlayerCommands",
                     Collections.singletonList("bedwars arenasGUI <arenaType>"));
 
-            config.addDefault("Menu.JoinNPC.Contents.CLOSE.Slot", 31);
-            config.addDefault("Menu.JoinNPC.Contents.CLOSE.Material", "ENDER_PEARL");
-            config.addDefault("Menu.JoinNPC.Contents.CLOSE.DisplayName", "&cClose");
-            config.addDefault("Menu.JoinNPC.Contents.CLOSE.PlayerCommands", Collections.singletonList("bedwars closeInventory"));
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.CLOSE.Slot", 31);
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.CLOSE.Material", "ENDER_PEARL");
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.CLOSE.DisplayName", "&cClose");
+            config.addDefault("Menu.BedwarsJoinNPC.Contents.CLOSE.PlayerCommands", Collections.singletonList("bedwars closeInventory"));
         }
 
         config.options().copyDefaults(true);
@@ -117,14 +117,6 @@ public class GUIStructure {
 
         return items;
     }
-
-//	 Material: BLACK_STAINED_GLASS
-//     DisplayName: ' '
-//     Glowing: false
-//     Lore:
-//	- a
-//	- b
-//	- c
 
     public static ItemBuilder readBuilder(String path) {
 

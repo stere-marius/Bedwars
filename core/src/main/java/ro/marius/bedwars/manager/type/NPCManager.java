@@ -1,21 +1,22 @@
 package ro.marius.bedwars.manager.type;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.npc.skin.SkinnableEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import ro.marius.bedwars.BedWarsPlugin;
+import ro.marius.bedwars.NPCSkin;
 import ro.marius.bedwars.game.gameobserver.NPCObserver;
 import ro.marius.bedwars.game.mechanics.NPCArena;
 import ro.marius.bedwars.manager.ManagerHandler;
+import ro.marius.bedwars.npc.BedwarsJoinNPC;
+import ro.marius.bedwars.npc.SkinFetcher;
+import ro.marius.bedwars.npc.bedwars.BedwarsNPC;
+import ro.marius.bedwars.npc.citizens.CitizensNPC;
 import ro.marius.bedwars.utils.Utils;
 
 import java.io.File;
@@ -26,135 +27,120 @@ import java.util.Map.Entry;
 public class NPCManager {
 
     public final static MetadataValue METADATA = new FixedMetadataValue(BedWarsPlugin.getInstance(), "BedwarsStand");
-    private final Map<String, List<NPCArena>> npc = new HashMap<>();
+    private final Map<String, List<NPCArena>> arenaTypeNpc = new HashMap<>();
+    private final Map<Integer, String> npcIdArenaType = new HashMap<>();
     private final File file = new File(BedWarsPlugin.getInstance().getDataFolder(), "npc.yml");
     private YamlConfiguration config = YamlConfiguration.loadConfiguration(this.file);
 
+    private BedwarsJoinNPC joinNPC;
+
     public NPCManager() {
-        this.loadNPC();
-        this.loadNPCGameObservers();
+        this.loadNpcAdapter();
     }
 
     public void loadNPCGameObservers() {
-
         ManagerHandler
                 .getGameManager()
                 .getGames()
                 .forEach(game -> game.registerObserver(new NPCObserver(game)));
-
     }
 
-    public void spawnNPC(Location location, String skinName, String arenaType, List<String> lines, boolean save) {
 
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "");
-        npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
-        npc.spawn(location);
-        Entity npcEntity = npc.getEntity();
-        npcEntity.setMetadata("NPCPlayer", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
+    public void loadNpcAdapter() {
 
-        if (npcEntity instanceof SkinnableEntity) {
-            ((SkinnableEntity) npcEntity).setSkinName(skinName);
+        String joinNPCAdapter = BedWarsPlugin.getInstance().getConfig().getString("JoinArenaNpcAdapter", "BEDWARS");
+        NPCManager.this.createJoinNPC(joinNPCAdapter);
+        Bukkit.getServer().getPluginManager().registerEvents(joinNPC, BedWarsPlugin.getInstance());
+
+        // For Citizens adapter the load NPC logic will be handled when the Citizens plugin gets loaded
+        if (!joinNPCAdapter.equalsIgnoreCase("CITIZENS")) {
+            loadNPC();
         }
+    }
 
-        List<ArmorStand> standList = new ArrayList<>();
-        Location clonedLocation = location.clone().add(0, 1.805, 0);
-        final double distance = 0.40;
-        int playersPlaying = ManagerHandler.getGameManager().getPlayersPlaying(arenaType);
+    public void createJoinNPC(String joinNpcAdapter) {
+        if (this.joinNPC != null) return;
+        this.joinNPC = "CITIZENS".equalsIgnoreCase(joinNpcAdapter) ? new CitizensNPC() : new BedwarsNPC();
+    }
 
-        for (String line : lines) {
-            ArmorStand stand = Utils.getSpawnedArmorStand(clonedLocation,
-                    Utils.translate(line).replace("<playersPlaying>", playersPlaying + ""));
-            stand.setRemoveWhenFarAway(false);
-            clonedLocation = clonedLocation.add(0, distance, 0);
-            stand.setMetadata("BedwarsStand", METADATA);
-            standList.add(stand);
-        }
+    public void spawnNPC(int index, Location location, String skinName, String arenaType, List<String> lines) {
+        joinNPC.spawnNPC(index, location, skinName);
+        setupNPCArena(index, location, arenaType, lines);
+    }
 
-        List<NPCArena> npcList = this.npc.computeIfAbsent(arenaType, k -> new ArrayList<>());
+    public void spawnNPC(int index, Location location, NPCSkin npcSkin, String arenaType, List<String> lines) {
+        joinNPC.spawnNPC(index, location, npcSkin);
+        setupNPCArena(index, location, arenaType, lines);
+    }
 
-        NPCArena npcArena = new NPCArena(npc, location, arenaType, standList, lines);
+    private void setupNPCArena(int index, Location location, String arenaType, List<String> lines) {
+        List<NPCArena> npcList = this.arenaTypeNpc.computeIfAbsent(arenaType, k -> new ArrayList<>());
+        NPCArena npcArena = new NPCArena(index, location, arenaType, lines);
+        npcArena.getNpcHologram().spawnHolograms(ManagerHandler.getGameManager().getPlayersPlaying(arenaType));
         npcList.add(npcArena);
-
-        if (save) {
-            String path = "NPC." + npc.getId();
-            this.config.set(path + ".Location", Utils.convertingString(location));
-            this.config.set(path + ".SkinName", skinName);
-            this.config.set(path + ".ArenaType", arenaType);
-            this.config.set(path + ".Lines", lines);
-            this.saveFile();
-        }
-
-
     }
+
 
     public void deleteNPC() {
 
-        for (Entry<String, List<NPCArena>> entry : this.npc.entrySet()) {
+        for (Entry<String, List<NPCArena>> entry : this.arenaTypeNpc.entrySet()) {
 
             List<NPCArena> list = entry.getValue();
             list.forEach(obj -> {
-                obj.despawnStandList();
-                obj.getNpc().despawn();
+                obj.getNpcHologram().despawnHolograms();
+                joinNPC.removeNPC(obj.getIndex());
             });
 
         }
 
     }
 
-    public void removeNPC(int id) {
+    private String getNpcConfigPath(int id) {
+        return "NPC." + id;
+    }
 
-        this.config.set("NPC." + id, null);
+    private void saveNPC(Location location, int id, String arenaType, List<String> lines) {
+        String path = getNpcConfigPath(id);
+        this.config.set(path + ".Location", Utils.convertingString(location));
+        this.config.set(path + ".ArenaType", arenaType);
+        this.config.set(path + ".Lines", lines);
+    }
+
+    public void saveNPC(Location location, int id, String skinName, String arenaType, List<String> lines) {
+        saveNPC(location, id, arenaType, lines);
+        this.config.set(getNpcConfigPath(id) + ".SkinName", skinName);
         this.saveFile();
+    }
 
+    public void saveNPC(Location location, int id, NPCSkin npcSkin, String arenaType, List<String> lines) {
+        saveNPC(location, id, arenaType, lines);
+        this.config.set(getNpcConfigPath(id) + ".Skin.Value", npcSkin.getValue());
+        this.config.set(getNpcConfigPath(id) + ".Skin.Signature", npcSkin.getSignature());
+        this.saveFile();
+    }
+
+    public void removeNPC(int id) {
+        this.config.set(getNpcConfigPath(id), null);
+        this.saveFile();
+    }
+
+    public void despawnNPC(int id) {
+        joinNPC.removeNPC(id);
+    }
+
+    public void setSkin(int id, NPCSkin npcSkin) {
+        joinNPC.updateSkin(id, npcSkin);
+        this.config.set(getNpcConfigPath(id) + ".Skin.Value", npcSkin.getValue());
+        this.config.set(getNpcConfigPath(id) + ".Skin.Signature", npcSkin.getSignature());
+        this.saveFile();
+    }
+
+    public int getNewNpcID() {
+        ConfigurationSection npcConfigurationSection = this.config.getConfigurationSection("NPC");
+        return npcConfigurationSection == null ? 0 : npcConfigurationSection.getKeys(false).size();
     }
 
 //	/bedwars joinNPC spawn SOLO rmellis &e<playersPlaying> Players;&bSolo &7[v1.6];&eCLICK TO PLAY
-
-    public void loadNPC(Location location, String skinName, String arenaType, List<String> lines, int id) {
-        NPC npc = CitizensAPI.getNPCRegistry().getById(id);
-
-        if (npc == null) {
-            npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, "");
-        }
-
-        if (!npc.isSpawned()) {
-            npc.spawn(location);
-        }
-
-        npc.data().set(NPC.NAMEPLATE_VISIBLE_METADATA, false);
-
-        Entity npcEntity = npc.getEntity();
-
-        if (npcEntity == null) {
-            System.out.println("npcEntity == null");
-            return;
-        }
-
-        npcEntity.setMetadata("NPCPlayer", new FixedMetadataValue(BedWarsPlugin.getInstance(), arenaType));
-
-        if (npcEntity instanceof SkinnableEntity) {
-            ((SkinnableEntity) npcEntity).setSkinName(skinName);
-        }
-
-        List<ArmorStand> standList = new ArrayList<>();
-        Location clonedLocation = location.clone().add(0, 1.805, 0);
-        int size = lines.size();
-        final double distance = 0.40;
-        int playersPlaying = ManagerHandler.getGameManager().getPlayersPlaying(arenaType);
-
-        for (String line : lines) {
-            ArmorStand stand = Utils.getSpawnedArmorStand(clonedLocation, Utils.translate(line).replace("<playersPlaying>", playersPlaying + ""));
-            stand.setRemoveWhenFarAway(false);
-            stand.setMetadata("BedwarsStand", METADATA);
-            clonedLocation = clonedLocation.add(0, distance, 0);
-            standList.add(stand);
-        }
-
-        List<NPCArena> npcList = this.npc.computeIfAbsent(arenaType, k -> new ArrayList<>());
-
-        NPCArena npcArena = new NPCArena(npc, location, arenaType, standList, lines);
-        npcList.add(npcArena);
-    }
 
     public void loadNPC() {
 
@@ -172,11 +158,23 @@ public class NPCManager {
             int id = Integer.parseInt(strID);
             Location location = Utils.convertingLocation(this.config.getString(path + ".Location"));
             String skinName = this.config.getString(path + ".SkinName");
+            String skinValue = this.config.getString(path + ".Skin.Value");
+            String skinSignature = this.config.getString(path + ".Skin.Signature");
             String arenaType = this.config.getString(path + ".ArenaType");
             List<String> lines = this.config.getStringList(path + ".Lines");
+            npcIdArenaType.put(id, arenaType);
 
-            this.loadNPC(location, skinName, arenaType, lines, id);
+            if (skinValue != null && skinSignature != null) {
+                spawnNPC(id, location, new NPCSkin(skinValue, skinSignature), arenaType, lines);
+                continue;
+            }
 
+            if (skinName != null) {
+                spawnNPC(id, location, skinName, arenaType, lines);
+                continue;
+            }
+
+            spawnNPC(id, location, SkinFetcher.DEFAULT_NPC_SKIN, arenaType, lines);
         }
 
     }
@@ -185,11 +183,11 @@ public class NPCManager {
 
         List<NPCArena> list = new ArrayList<>();
 
-        for (List<NPCArena> npcArena : this.npc.values()) {
+        for (List<NPCArena> npcArena : this.arenaTypeNpc.values()) {
 
             for (NPCArena npc : npcArena) {
 
-                if (!npc.getLocation().getChunk().equals(chunk)) {
+                if (!npc.getNpcHologram().getLocation().getChunk().equals(chunk)) {
                     continue;
                 }
 
@@ -203,7 +201,7 @@ public class NPCManager {
 
     public NPCArena getNPCByUUID(UUID uuid) {
 
-        for (List<NPCArena> npcArena : this.npc.values()) {
+        for (List<NPCArena> npcArena : this.arenaTypeNpc.values()) {
 
             for (NPCArena npc : npcArena) {
 
@@ -228,8 +226,16 @@ public class NPCManager {
         }
     }
 
-    public Map<String, List<NPCArena>> getNpc() {
-        return this.npc;
+    public BedwarsJoinNPC getJoinNPC() {
+        return joinNPC;
+    }
+
+    public Map<String, List<NPCArena>> getArenaTypeNpc() {
+        return this.arenaTypeNpc;
+    }
+
+    public Map<Integer, String> getNpcIdArenaType() {
+        return npcIdArenaType;
     }
 
     public File getFile() {

@@ -63,7 +63,6 @@ public class C_1_13_R2 extends EntityCreeper implements IShopKeepers {
 
         this.killEntity();
 
-        Bukkit.getConsoleSender().sendMessage(Utils.translate("&ca(NBTTagCompound nbttagcompound)"));
         // load data
     }
 

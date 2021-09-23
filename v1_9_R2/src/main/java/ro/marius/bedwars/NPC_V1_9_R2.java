@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_9_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import ro.marius.bedwars.utils.ReflectionUtils;
 
@@ -19,14 +20,9 @@ public class NPC_V1_9_R2 extends NPCPlayer {
     private EntityPlayer entityPlayer;
 
     @Override
-    public void spawnNPC(Location location, NPCSkin skin) {
+    public void createNPC(Location location, NPCSkin skin) {
         gameProfile.getProperties().get("textures").clear();
         gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
-        spawnNPC(location);
-    }
-
-    @Override
-    public void spawnNPC(Location location) {
         MinecraftServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
         WorldServer nmsWorld = ((CraftWorld) location.getWorld()).getHandle();
         entityPlayer = new EntityPlayer(nmsServer, nmsWorld, gameProfile, new PlayerInteractManager(nmsWorld));
@@ -75,37 +71,39 @@ public class NPC_V1_9_R2 extends NPCPlayer {
     }
 
     @Override
-    public void removeFromTablist() {
+    public void sendPacketsRemoveTablist(Player player) {
         PacketPlayOutPlayerInfo packetPlayOutPlayerInfo =
                 new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
 
-        for (Player player : getViewers()) {
-            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-            connection.sendPacket(packetPlayOutPlayerInfo);
-        }
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+        connection.sendPacket(packetPlayOutPlayerInfo);
 
     }
 
     @Override
-    public void hideName() {
+    public void sendPacketsHideName(Player player) {
         Collection<String> gameProfile = Collections.singletonList(this.gameProfile.getName());
 
         PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeam = new PacketPlayOutScoreboardTeam();
 
         ReflectionUtils.setFieldValue("a", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, this.gameProfile.getName());
-        ReflectionUtils.setFieldValue("b", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, "displayName");
-        ReflectionUtils.setFieldValue("c", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, "prefix");
-        ReflectionUtils.setFieldValue("d", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, "suffix");
         ReflectionUtils.setFieldValue("e", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, ScoreboardTeamBase.EnumNameTagVisibility.NEVER.e);
         ReflectionUtils.setFieldValue("h", PacketPlayOutScoreboardTeam.class, packetPlayOutScoreboardTeam, gameProfile);
 
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutScoreboardTeam);
+    }
+
+    @Override
+    public void remove() {
+        PacketPlayOutEntityDestroy packetPlayOutEntityDestroy =
+                new PacketPlayOutEntityDestroy(entityPlayer.getId());
         for (Player player : getViewers()) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutScoreboardTeam);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutEntityDestroy);
         }
     }
 
     @Override
-    public int getEntityID(){
-        return entityPlayer.getId();
+    public Entity getBukkitEntity() {
+        return entityPlayer.getBukkitEntity();
     }
 }
