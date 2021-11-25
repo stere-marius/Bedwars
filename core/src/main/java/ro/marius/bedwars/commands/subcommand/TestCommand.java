@@ -136,9 +136,24 @@ public class TestCommand implements ISubCommand {
             return;
         }
 
-        if ("clearSelection".equalsIgnoreCase(args[1])) {
-            new LobbyRemovalTask(selection).runTaskTimer(BedWarsPlugin.getInstance(), 1, 1);
+        if ("lobbyRemovalTask".equalsIgnoreCase(args[1])) {
+            new LobbyRemovalTask(ManagerHandler.getGameManager().getGame(args[2]), Material.valueOf(args[3])).runTaskTimer(BedWarsPlugin.getInstance(), 1, 1);
             p.sendMessage(Utils.translate("&a>> Lobby Removal Task successfully started."));
+            return;
+        }
+
+        if ("lobbyCuboidInfo".equalsIgnoreCase(args[1])) {
+            CuboidSelection waitingLobbySelection = ManagerHandler.getGameManager().getGame(args[2]).getWaitingLobbySelection();
+            p.sendMessage("waitingLobbySelection.getBlocks().size() = " + waitingLobbySelection.getBlocks().size());
+            return;
+        }
+
+        if ("selectCuboid".equalsIgnoreCase(args[1])) {
+            CuboidSelection waitingLobbySelection = ManagerHandler.getGameManager().getGame(args[2]).getWaitingLobbySelection();
+            waitingLobbySelection.assignValues();
+            waitingLobbySelection.select();
+            p.sendMessage(Utils.translate("&a>> Lobby Cuboid successfully selected."));
+            return;
         }
 
         if ("countNonAirBlocks".equalsIgnoreCase(args[1])) {

@@ -26,27 +26,27 @@ import ro.marius.bedwars.utils.TextComponentBuilder;
 import ro.marius.bedwars.utils.Utils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameSetup {
 
-    private final Map<TeamSetup, Boolean> expandedTeams = new HashMap<>();
-    private Player player;
+    private final Player player;
     private String scoreboardPath;
     private String upgradePath;
     private String shopPath;
-    private String name;
-    private String arenaType;
-    private int playersPerTeam;
+    private final String name;
+    private final String arenaType;
+    private final int playersPerTeam;
     private CuboidSelection gameCuboid;
+    private CuboidSelection lobbyCuboid;
     private int minimumTeams;
     private int steps;
     private Location spectateLocation;
     private Location inWaiting;
     private Location positionOne, positionTwo;
-    private List<Location> diamondGenerator = new ArrayList<>();
-    private List<Location> emeraldGenerator = new ArrayList<>();
-    private List<TeamSetup> teams = new ArrayList<>();
-    private boolean isEditing = false;
+    private final List<Location> diamondGenerator = new ArrayList<>();
+    private final List<Location> emeraldGenerator = new ArrayList<>();
+    private final List<TeamSetup> teams = new ArrayList<>();
 
     public GameSetup(Player player, String name, String arenaType, int playersPerTeam, int minimumTeams) {
         this.player = player;
@@ -58,35 +58,20 @@ public class GameSetup {
 
     public void sendAvailableCommands() {
 
-//		if (isEditing) {
-//			player.sendMessage(Utils.translate("&e-----------------------------------------------"));
-//			player.sendMessage(" ");
-//
-//			if (!hasTeleported) {
-//				Utils.sendPerformCommand(player, "/bedwars teleportToArena " + name,
-//						"&e⇨ Click the message to teleport to arena", "&eClick me");
-//			}
-//			
-//			for(Entry<TeamSetup,Boolean> entry: expandedTeams.entrySet()) {
-//				
-//				if(entry.getValue()) {
-//					
-//					continue;
-//				}
-//				
-//				
-//				
-//			}
-//
-//			player.sendMessage(" ");
-//			player.sendMessage(Utils.translate("&e-----------------------------------------------"));
-//			return;
-//		}
-
         this.player.sendMessage(Utils.translate("&e-----------------------------------------------"));
         this.player.sendMessage(" ");
 
-        if (this.getSteps() == 1) {
+        if (this.steps == 1) {
+            player.sendMessage(Utils.translate("&e⇨ Select the waiting lobby to be removal when the arena starts."));
+            player.sendMessage(Utils.translate("&c⇨ WARNING: The lobby must be in the same world with the arena's world in order to reset."));
+            Utils.sendSuggestCommand(this.player, "/bedwars nextStep", "&e⇨ Skip this step &e⇨/bedwars nextStep",
+                    "&aClick me to write the command in chat!");
+            this.player.sendMessage(" ");
+            this.player.sendMessage(Utils.translate("&e-----------------------------------------------"));
+            return;
+        }
+
+        if (this.steps == 2) {
             Utils.sendSuggestCommand(this.player, "/bedwars createTeam teamName color",
                     "&e⇨ Create " + (this.teams.isEmpty() ? "a" : "another") + " team, click the message.",
                     "&aClick me to write the command in chat!");
@@ -97,7 +82,8 @@ public class GameSetup {
             return;
         }
 
-        if (this.getSteps() == 2) {
+
+        if (this.steps == 3) {
 
             if (this.inWaiting == null) {
                 Utils.sendPerformCommand(this.player, "/bedwars setWaitingLocation", "&e⇨ /bedwars setWaitingLocation",
@@ -123,8 +109,6 @@ public class GameSetup {
 
             return;
         }
-
-        // for(int)
 
         for (TeamSetup team : this.teams) {
 
@@ -233,9 +217,6 @@ public class GameSetup {
 
         }
 
-        CuboidSelection selection = new CuboidSelection(this.positionOne, this.positionTwo);
-        selection.assignValues();
-
 //		public Game(String name, String scoreboardPath, String arenaType, GameLocation spectateLocation, GameLocation inWaiting,
 //				CuboidSelection gameCuboid, int playersPerTeam, int minTeams, int maxPlayers, List<Team> teams,
 //				List<GameLocation> diamondGenerator, List<GameLocation> emeraldGenerator)
@@ -243,7 +224,7 @@ public class GameSetup {
         this.scoreboardPath = (this.scoreboardPath == null) ? this.arenaType : this.scoreboardPath;
 
         Game game = new Game(this.name, this.scoreboardPath, this.arenaType, GameLocation.convertLocation(this.spectateLocation),
-                GameLocation.convertLocation(this.inWaiting), selection, this.playersPerTeam, this.minimumTeams,
+                GameLocation.convertLocation(this.inWaiting), gameCuboid, this.playersPerTeam, this.minimumTeams,
                 this.getTeams().size() * this.playersPerTeam, teams, GameLocation.getConvertedLocation(this.diamondGenerator),
                 GameLocation.getConvertedLocation(this.emeraldGenerator));
 
@@ -267,12 +248,18 @@ public class GameSetup {
         config.set(path + ".DiamondGenerators", Utils.setConvertingLocations(this.getDiamondGenerator()));
         config.set(path + ".EmeraldGenerators", Utils.setConvertingLocations(this.getEmeraldGenerator()));
         config.set(path + ".Spectate", Utils.convertingString(this.getSpectateLocation()));
-        config.set(path + ".PositionOne", Utils.convertingString(this.positionOne));
-        config.set(path + ".PositionTwo", Utils.convertingString(this.positionTwo));
+        config.set(path + ".PositionOne", Utils.convertingString(this.gameCuboid.getPositionOne()));
+        config.set(path + ".PositionTwo", Utils.convertingString(this.gameCuboid.getPositionTwo()));
         config.set(path + ".MinimumTeams", this.getMinimumTeams());
         config.set(path + ".Waiting", Utils.convertingString(this.getInWaiting()));
         config.set(path + ".MaxPlayers", this.getTeams().size() * this.playersPerTeam);
         config.set(path + ".PerTeamPlayers", this.playersPerTeam);
+
+        if (lobbyCuboid != null) {
+            config.set(path + ".LobbyPositionOne", Utils.convertingString(this.lobbyCuboid.getPositionOne()));
+            config.set(path + ".LobbyPositionTwo", Utils.convertingString(this.lobbyCuboid.getPositionTwo()));
+            game.setWaitingLobbySelection(this.lobbyCuboid);
+        }
 
         for (Team team : teams) {
             String name = team.getName();
@@ -389,7 +376,7 @@ public class GameSetup {
 
     public void addStep() {
 
-        if (this.steps == 1) {
+        if (this.steps == 2) {
 
             if (this.getTeams().size() < 2) {
                 this.player.sendMessage(Utils.translate("&c⇨ You must create at least two teams."));
@@ -397,7 +384,7 @@ public class GameSetup {
             }
         }
 
-        if (this.steps == 2) {
+        if (this.steps == 3) {
 
             if (this.inWaiting == null) {
                 this.player.sendMessage(Utils.translate("&c⇨ You must set the waiting location."));
@@ -424,56 +411,39 @@ public class GameSetup {
         this.steps++;
     }
 
-    public boolean containsTeam(String teamName) {
-
-        boolean contains = false;
-
-        for (TeamSetup team : this.teams) {
-
-            if (!team.getTeamName().equals(teamName)) {
-                continue;
-            }
-
-            contains = true;
-            break;
+    public void performCuboidSelection() {
+        if (this.steps == 0) {
+            gameCuboid = new CuboidSelection(positionOne, positionTwo);
+            gameCuboid.assignValues();
         }
 
-        return contains;
+        if (this.steps == 1) {
+            lobbyCuboid = new CuboidSelection(positionOne, positionTwo);
+            lobbyCuboid.assignValues();
+            lobbyCuboid.select();
+            player.setItemInHand(null);
+        }
+
+        positionOne = positionTwo = null;
+        addStep();
+        sendAvailableCommands();
+    }
+
+    public boolean containsTeam(String teamName) {
+        return teams.stream().anyMatch(team -> team.getTeamName().equals(teamName));
     }
 
     public TeamSetup getTeamSetup(String teamName) {
-
-        TeamSetup teamSetup = null;
-
-        for (TeamSetup team : this.teams) {
-
-            if (!team.getTeamName().equals(teamName)) {
-                continue;
-            }
-
-            teamSetup = team;
-            break;
-        }
-
-        return teamSetup;
-
+        return teams.stream().filter(team -> team.getTeamName().equals(teamName)).findFirst().get();
     }
 
+//    87 103 93 - -87 44 -86
+
+
+//    13.709 115 12.639 - -12.566 126 -12.715
+
     public int getTeamsReady() {
-
-        int i = 0;
-
-        for (TeamSetup team : this.teams) {
-
-            if (!team.isReady()) {
-                continue;
-            }
-
-            i++;
-        }
-
-        return i;
-
+        return this.teams.stream().filter(TeamSetup::isReady).collect(Collectors.toSet()).size();
     }
 
     public String getName() {

@@ -323,8 +323,9 @@ public class GameManager {
                             .convertGameLocation(GameManager.this.game.getString("Games." + name + ".PositionTwo"));
 //										Object timeStart = game.get("Games." + name + ".StartingTime");
 
-//										String lobbyOne = game.getString("Games." + name + ".LobbyPositionOne");
-//										String lobbyTwo = game.getString("Games." + name + ".LobbyPositionTwo");
+                    String lobbyOne = game.getString("Games." + name + ".LobbyPositionOne");
+                    String lobbyTwo = game.getString("Games." + name + ".LobbyPositionTwo");
+
                     String scPath = GameManager.this.game.getString("Games." + name + ".ScoreboardPath");
                     String upgPath = GameManager.this.game.getString("Games." + name + ".UpgradePath");
                     String optionsPath = GameManager.this.game.getString("Games." + name + ".ArenaOptionsPath");
@@ -391,6 +392,7 @@ public class GameManager {
                     CuboidSelection gameCuboid = new CuboidSelection(positionOne.getLocation(), positionTwo.getLocation());
                     gameCuboid.assignValues();
 
+
                     Game game = new Game(name, scPath, type, spectate, waiting, gameCuboid, playersPerTeam,
                             minPlayers, maxPlayers, teams, diamondGenerators, emeraldGenerators);
                     game.setUpgradePathName(upgPath);
@@ -427,6 +429,14 @@ public class GameManager {
                                     Utils.translate("&c[Bedwars] The schematic has been saved for arena " + name));
                         }
 
+                    }
+
+                    if (lobbyOne != null && lobbyTwo != null) {
+                        CuboidSelection selection = new CuboidSelection(Utils.convertingLocation(lobbyOne),
+                                Utils.convertingLocation(lobbyTwo));
+                        selection.assignValues();
+                        selection.select();
+                        game.setWaitingLobbySelection(selection);
                     }
 
                     GameManager.this.games.add(game);

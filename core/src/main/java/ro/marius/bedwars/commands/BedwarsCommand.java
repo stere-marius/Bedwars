@@ -191,18 +191,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-
-        if ("getHolograms".equalsIgnoreCase(args[0])) {
-
-            PlayerHologram playerHologram = ManagerHandler.getHologramManager().getPlayerHologram(p);
-            int size = playerHologram.getPlayerHolograms().size();
-            p.sendMessage("Player hologram size " + size);
-            p.sendMessage("Player hologram location list " + playerHologram.getLocationHolograms().size());
-            p.sendMessage("Player hologram list " + playerHologram.getPlayerHolograms().values().size());
-
-            return;
-        }
-
         if ("getTeamSelector".equalsIgnoreCase(args[0])) {
 
             AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(p.getUniqueId());
@@ -300,11 +288,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("list".equalsIgnoreCase(args[0])) {
-
-            return;
-        }
-
         if ("closeArena".equalsIgnoreCase(args[0])) {
 
             Game game = ManagerHandler.getGameManager().getGame(args[1]);
@@ -330,56 +313,6 @@ public class BedwarsCommand extends AbstractCommand {
 
             game.getMatch().setMatchState(MatchState.IN_WAITING);
             p.sendMessage(Utils.translate("&a>> The arena " + args[1] + " has been opened"));
-            return;
-        }
-
-        if ("spawnGenerator".equalsIgnoreCase(args[0])) {
-
-            DiamondGenerator gen = new DiamondGenerator(p.getLocation(),
-                    ManagerHandler.getGameManager().getGame("arena1").getMatch());
-            gen.spawn();
-            gen.getSupportArmorStand().setVisible(true);
-
-            new BukkitRunnable() {
-
-                double y = 0;
-                boolean up = true;
-                int secTeleport = 0;
-
-                boolean inverse = true;
-//				int secInverse = 0;
-
-                @Override
-                public void run() {
-
-                    this.secTeleport += 1;
-                    this.y += 0.03;
-
-                    if (this.secTeleport == 7) {
-                        this.inverse = false;
-                        this.up = false;
-                        this.y = 0;
-                        return;
-                    }
-
-                    if (this.secTeleport == 14) {
-                        this.inverse = true;
-                        this.up = true;
-                        this.y = 0;
-                        this.secTeleport = 0;
-                        return;
-                    }
-
-                    Location location = this.up ? gen.getSupportArmorStand().getLocation().subtract(0, this.y, 0)
-                            : gen.getSupportArmorStand().getLocation().add(0, this.y, 0);
-                    location.setYaw(location.getYaw() + ((this.inverse ? (40 + this.secTeleport) : (-40 - this.secTeleport)) + 5));
-                    gen.getSupportArmorStand().teleport(location);
-
-                }
-            }.runTaskTimer(BedWarsPlugin.getInstance(), 0, 3);
-
-            p.sendMessage("DEBUG");
-
             return;
         }
 
@@ -549,40 +482,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("givePotions".equalsIgnoreCase(args[0])) {
-
-            PotionBuilder potionBuilder = new PotionBuilder(1);
-
-            if (args.length >= 5) {
-                potionBuilder.setPotionBaseType(PotionType.valueOf(args[1]));
-                potionBuilder.addEffectType(PotionEffectType.getByName(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
-            }
-
-            if (args.length == 2) {
-                potionBuilder.setPotionBaseType(PotionType.valueOf(args[1]));
-            }
-
-
-            ItemBuilder itemBuilder = new ItemBuilder(potionBuilder);
-
-            p.getInventory().addItem(itemBuilder.build());
-            p.getInventory().addItem(potionBuilder.build());
-            p.sendMessage("DONE");
-
-            return;
-        }
-
-        if ("spawnGolem".equalsIgnoreCase(args[0])) {
-
-            Location location = p.getLocation();
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnGolem(location).setCustomName("Nume");
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnBlaze(location.add(1, 0, 0));
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnCreeper(location.add(1, 0, 0));
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnSkeleton(location.add(1, 0, 0));
-            p.sendMessage("Spawned");
-            return;
-        }
-
         if ("repause".equalsIgnoreCase(args[0])) {
 
             if (args.length <= 1) {
@@ -631,35 +530,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("openShopInventory".equalsIgnoreCase(args[0])) {
-
-            Game game = ManagerHandler.getGameManager().getGame("arena1");
-            ShopInventory inv = game.getShopPath().getInventory().get("POTIONS");
-            Team team = game.getMatch().findAvailableTeam();
-            game.getMatch().getPlayerTeam().put(p.getUniqueId(), team);
-            inv.setGame(game);
-            inv.setPlayer(p);
-            inv.setTeam(team);
-            p.openInventory(inv.getInventory());
-
-            return;
-        }
-
-        if ("openUpgradeInventory".equalsIgnoreCase(args[0])) {
-
-            Game game = ManagerHandler.getGameManager().getGame("arena1");
-            UpgradeInventory inv = game.getUpgradePath().getUpgradeInventoryMap().get("MAIN_INVENTORY");
-            Team team = game.getMatch().findAvailableTeam();
-            team.getPlayers().add(p);
-            game.getMatch().getPlayerTeam().put(p.getUniqueId(), team);
-            inv.setGame(game);
-            inv.setPlayer(p);
-            inv.setTeam(team);
-            p.openInventory(inv.getInventory());
-            ManagerHandler.getGameManager().getPlayerMatch().put(p.getUniqueId(), game.getMatch());
-
-            return;
-        }
 
         if ("removeArmorStand".equalsIgnoreCase(args[0])) {
 
@@ -735,12 +605,6 @@ public class BedwarsCommand extends AbstractCommand {
 
             ManagerHandler.getGameManager().getGameEdit().put(p.getUniqueId(), gameEdit);
             this.subCommand.get("arenaEdit").onCommand(p, args);
-
-            return;
-        }
-
-        if ("giveNewWool".equalsIgnoreCase(args[0])) {
-
 
             return;
         }
@@ -899,39 +763,10 @@ public class BedwarsCommand extends AbstractCommand {
         }
 
         if ("joinNPC".equalsIgnoreCase(args[0])) {
-
-            if (ManagerHandler.getNPCManager() == null) {
-                p.sendMessage(Utils.translate(
-                        "&cYou have to install Citizens to spawn an npc. Get it for free from here: https://www.spigotmc.org/resources/citizens.13811/"));
-                return;
-            }
-
-//			/bedwars spawnJoinNPC <arenaType> <skinName> <lines>
-
             this.subCommand.get("joinNPC").onCommand(sender, args);
-
             return;
         }
 
-        if ("updateNPC".equalsIgnoreCase(args[0])) {
-
-            for (Game game : ManagerHandler.getGameManager().getGames()) {
-                game.notifyObservers();
-                p.sendMessage("UPDATING " + game.getName() + " npc");
-            }
-
-            return;
-        }
-
-        if ("spawnVillager".equalsIgnoreCase(args[0])) {
-            Location location = p.getLocation();
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnVillager(p.getLocation());
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnBlaze(location);
-            ManagerHandler.getVersionManager().getVersionWrapper().spawnCreeper(location);
-            ManagerHandler.getVersionManager().getSpawnedEntity("VILLAGER", p.getLocation());
-            p.sendMessage("SPAWNED");
-            return;
-        }
         if ("saveSchematic".equalsIgnoreCase(args[0])) {
 
             if (args.length < 2) {
@@ -993,34 +828,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("incrementStats".equalsIgnoreCase(args[0])) {
-
-            APlayerData playerData = ManagerHandler.getGameManager().getPlayerData().get(p.getUniqueId());
-
-            playerData.addDeaths("SOLO", 10);
-            playerData.addKills("SOLO", 10);
-            playerData.addGamePlayed("SOLO");
-            playerData.addBedsBroken("SOLO", 1);
-            playerData.addBedLost("SOLO");
-            playerData.addFinalKills("SOLO", 1);
-            playerData.addWin("SOLO");
-            playerData.addDefeat("SOLO");
-
-            p.sendMessage("DONE");
-
-            return;
-        }
-
-        if ("saveStats".equalsIgnoreCase(args[0])) {
-
-            APlayerData playerData = ManagerHandler.getGameManager().getPlayerData().get(p.getUniqueId());
-            playerData.saveData();
-
-            p.sendMessage("SAVED");
-
-            return;
-        }
-
         if ("arenas".equalsIgnoreCase(args[0])) {
             StringJoiner strJoiner = new StringJoiner(" , ");
 
@@ -1077,111 +884,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("respawn".equalsIgnoreCase(args[0])) {
-
-            Player target = Bukkit.getPlayer(args[1]);
-
-            p.sendMessage("Target is dead: " + target.isDead());
-
-            target.spigot().respawn();
-
-            return;
-        }
-
-        if ("getWorldContainer".equalsIgnoreCase(args[0])) {
-
-            p.sendMessage(Bukkit.getWorldContainer().getAbsolutePath() + " | " + Bukkit.getWorldContainer().getName());
-
-            return;
-        }
-
-        if ("regenerateArena".equalsIgnoreCase(args[0])) {
-
-            Game game = ManagerHandler.getGameManager().getGame(args[1]);
-
-            ManagerHandler.getWorldManager().regenerateWorld(Bukkit.getWorld(game.getName()), new WorldCallback() {
-
-                @Override
-                public void onComplete(World result, String[] message) {
-                    p.sendMessage("DONE");
-
-                }
-
-                @Override
-                public void onError(String[] message) {
-                    // TODO Auto-generated method stub
-
-                }
-            });
-
-            return;
-        }
-
-        if ("deleteWorldFolder".equalsIgnoreCase(args[0])) {
-
-            if (args.length < 2) {
-                p.sendMessage(this.insfArgs + " deleteWorldFolder <worldName>");
-                return;
-            }
-
-            World world = Bukkit.getWorld(args[1]);
-            FileUtils.deleteFolder(world.getWorldFolder());
-            p.sendMessage("DONE");
-
-            return;
-        }
-
-        if ("replaceArenaWorlds".equalsIgnoreCase(args[0])) {
-
-            if (args.length < 2) {
-                p.sendMessage(this.insfArgs + " replaceArenaWorlds <arenaName>");
-                return;
-            }
-
-            World world = Bukkit.getWorld(args[1]);
-            File worldSaved = new File(
-                    BedWarsPlugin.getInstance().getDataFolder().getPath() + "/WorldSaves/" + world.getName());
-            SimpleWorldAdapter worldAdapter = (SimpleWorldAdapter) ManagerHandler.getWorldManager().getWorldAdapter();
-            worldAdapter.copyWorldFolder(worldSaved, world.getWorldFolder());
-            p.sendMessage("DONE");
-
-            return;
-        }
-
-        if ("testRegenerateArena".equalsIgnoreCase(args[0])) {
-
-            if (args.length < 2) {
-                p.sendMessage(this.insfArgs + " testRegenerateArena <arenaName>");
-                return;
-            }
-
-            World world = Bukkit.getWorld(args[1]);
-
-            for (Chunk chunk : world.getLoadedChunks()) {
-                chunk.unload();
-            }
-
-            SimpleWorldAdapter worldAdapter = (SimpleWorldAdapter) ManagerHandler.getWorldManager().getWorldAdapter();
-
-            WorldCreator worldCreator = new WorldCreator(args[1]);
-            worldCreator.seed(world.getSeed());
-            worldCreator.generateStructures(false);
-            worldCreator.generator(worldAdapter.getVOID_GENERATOR());
-            World createdWorld = worldCreator.createWorld();
-            createdWorld.setKeepSpawnInMemory(false);
-            createdWorld.setSpawnFlags(true, false);
-            createdWorld.setAutoSave(false);
-            createdWorld.setTime(6000L);
-            createdWorld.setThundering(false);
-            createdWorld.setThunderDuration(Integer.MAX_VALUE);
-            createdWorld.setStorm(false);
-            createdWorld.setTime(0L);
-
-            Bukkit.getWorlds().add(createdWorld);
-            p.sendMessage("The world " + args[1] + " has loaded successfully.");
-
-            return;
-        }
 
         if ("setLobby".equalsIgnoreCase(args[0])) {
 
@@ -1203,15 +905,6 @@ public class BedwarsCommand extends AbstractCommand {
             game.getMatch().endGame("NORMAL");
 
             p.sendMessage("DONE");
-
-            return;
-        }
-
-        if ("setPlayerTeam".equalsIgnoreCase(args[0])) {
-
-            ManagerHandler.getGameManager().getPlayerMatch().get(p.getUniqueId()).getPlayerTeam().put(p.getUniqueId(),
-                    ManagerHandler.getGameManager().getPlayerMatch().get(p.getUniqueId()).getTeams().get(1));
-            p.sendMessage("ADDED");
 
             return;
         }
@@ -1246,14 +939,6 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
-        if ("spawnVillager".equalsIgnoreCase(args[0])) {
-
-            ManagerHandler.getVersionManager().getSpawnedEntity("VILLAGER", p.getLocation());
-            ManagerHandler.getVersionManager().getSpawnedEntity("CREEPER", p.getLocation());
-            p.sendMessage("Spawned");
-            return;
-        }
-
         if ("nextEvent".equalsIgnoreCase(args[0])) {
 
             AMatch match = ManagerHandler.getGameManager().getPlayerMatch().get(p.getUniqueId());
@@ -1282,36 +967,6 @@ public class BedwarsCommand extends AbstractCommand {
 
                 }
             }.runTaskLater(BedWarsPlugin.getInstance(), 30);
-
-            return;
-        }
-
-        if ("getItems".equalsIgnoreCase(args[0])) {
-
-            p.getInventory().addItem(Items.GAME_LEAVE.toItemStack());
-            p.getInventory().addItem(XMaterial.matchXMaterial("STAINED_GLASS_PANE", (byte) 14).parseItem());
-
-            return;
-        }
-
-        if ("putEmptyTeam".equalsIgnoreCase(args[0])) {
-
-            Game game = ManagerHandler.getGameManager().getGame("arena1");
-            AMatch match = game.getMatch();
-            Team team = match.getPlayerTeam().containsKey(p.getUniqueId()) ? match.getPlayerTeam().get(p.getUniqueId())
-                    : match.findEmptyTeam();
-            team.getPlayers().add(p);
-            match.getPlayerTeam().put(p.getUniqueId(), team);
-            ManagerHandler.getGameManager().getPlayerMatch().put(p.getUniqueId(), match);
-            p.sendMessage("Added to team " + team.getColorName());
-
-        }
-
-        if ("saveGameWorld".equalsIgnoreCase(args[0])) {
-
-            ManagerHandler.getWorldManager().saveWorld(args[1]);
-
-            p.sendMessage("Saved. Entities " + Bukkit.getWorld(args[1]).getEntities().size());
 
             return;
         }
@@ -1355,27 +1010,6 @@ public class BedwarsCommand extends AbstractCommand {
             }
 
             p.sendMessage("DONE");
-
-            return;
-        }
-
-
-        if ("createWorld".equalsIgnoreCase(args[0])) {
-
-            ManagerHandler.getWorldManager().createWorld(args[1], new WorldCallback() {
-
-                @Override
-                public void onError(String[] message) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onComplete(World result, String[] message) {
-                    p.teleport(result.getSpawnLocation());
-
-                }
-            });
 
             return;
         }
@@ -1610,47 +1244,6 @@ public class BedwarsCommand extends AbstractCommand {
                 return;
             }
 
-//			String scoreboardPath = "DEFAULT";
-//			String upgradePath = "DEFAULT";
-//			String shopPath = "DEFAULT";
-
-//			if (args.length >= 6) {
-//
-//				if (ManagerHandler.getScoreboardManager().getConfig().get("ScoreboardPath." + args[5]) == null) {
-//					p.sendMessage(Utils.translate("&cThere is not an scoreboard path with name " + args[5]));
-//					return;
-//				}
-//
-//				scoreboardPath = args[5];
-//			}
-//
-//			if (args.length >= 7) {
-//
-//				String path = args[6];
-//
-//				p.sendMessage(ManagerHandler.getGameManager().getUpgradePath().toString());
-//
-//				if (!ManagerHandler.getGameManager().getUpgradePath().containsKey(path)) {
-//					p.sendMessage(Utils.translate("&cThere is not an upgrade path with the name " + path));
-//					return;
-//				}
-//
-//				upgradePath = path;
-//			}
-//
-//			if (args.length >= 8) {
-//				String path = args[7];
-//
-//				p.sendMessage(ManagerHandler.getGameManager().getShopPath().toString());
-//
-//				if (!ManagerHandler.getGameManager().getShopPath().containsKey(path)) {
-//					p.sendMessage(Utils.translate("&cThere is not an shop path with the name " + path));
-//					return;
-//				}
-//
-//				shopPath = path;
-//			}
-
             if (args[1].equals(Bukkit.getWorlds().get(0).getName())) {
                 p.sendMessage(Utils.translate(
                         "&cYou can't create an arena in the main world named " + Bukkit.getWorlds().get(0).getName()));
@@ -1685,16 +1278,6 @@ public class BedwarsCommand extends AbstractCommand {
 
             GameSetup gameSetup = new GameSetup(p, args[1], args[2], Integer.parseInt(args[3]),
                     Integer.parseInt(args[4]));
-//			gameSetup.setScoreboardPath(scoreboardPath);
-//			gameSetup.setUpgradePath(upgradePath);
-//			gameSetup.setShopPath(shopPath);
-
-//			if (args.length >= 6) {
-//				String scPath = 
-//				
-//			}
-
-//			gameSetup.sendAvailableCommands();
             ManagerHandler.getGameManager().getGameSetup().put(p, gameSetup);
             p.sendMessage(Utils.translate("&eSelect the arena bounds using the axe."));
             ItemStack item = new ItemBuilder(XMaterial.WOODEN_AXE.parseMaterial())

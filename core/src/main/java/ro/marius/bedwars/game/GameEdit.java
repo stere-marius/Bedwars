@@ -54,8 +54,6 @@ public class GameEdit {
             File newWorldFile = new File(worldFile.getParentFile(), game.getName());
             ManagerHandler.getWorldManager().getWorldAdapter().copyWorldFolder(worldFile, newWorldFile);
 
-            // TODO: Send message if he wants to delete the world
-            // TODO: Send message if there is already an world loded
 
             new BukkitRunnable() {
                 @Override
@@ -143,6 +141,11 @@ public class GameEdit {
         config.set(path + ".Waiting", Utils.convertingString(game.getWaitingLocation().getLocation()));
         config.set(path + ".MaxPlayers", game.getTeams().size() * game.getPlayersPerTeam());
         config.set(path + ".PerTeamPlayers", game.getPlayersPerTeam());
+
+        if (game.getWaitingLobbySelection() != null) {
+            config.set(path + ".LobbyPositionOne", Utils.convertingString(game.getWaitingLobbySelection().getPositionOne()));
+            config.set(path + ".LobbyPositionTwo", Utils.convertingString(game.getWaitingLobbySelection().getPositionTwo()));
+        }
 
         for (Team team : game.getTeams()) {
             String name = team.getName();

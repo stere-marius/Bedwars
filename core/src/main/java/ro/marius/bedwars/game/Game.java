@@ -1,10 +1,12 @@
 package ro.marius.bedwars.game;
 
 import org.bukkit.Location;
+import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.configuration.ArenaOptions;
 import ro.marius.bedwars.game.gameobserver.GameObserver;
 import ro.marius.bedwars.game.gameobserver.SignObserver;
 import ro.marius.bedwars.game.mechanics.GameLocation;
+import ro.marius.bedwars.game.mechanics.LobbyRemovalTask;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.match.MatchState;
 import ro.marius.bedwars.shopconfiguration.ShopPath;
@@ -27,6 +29,7 @@ public class Game {
     private GameLocation spectateLocation;
     private GameLocation waitingLocation;
     private final CuboidSelection gameCuboid;
+    private CuboidSelection waitingLobbySelection;
     private int playersPerTeam;
     private int minTeamsToStart;
     private int maxPlayers;
@@ -110,6 +113,14 @@ public class Game {
             }
         }
         return false;
+    }
+
+    public void startLobbyRemovalTask() {
+
+        if (waitingLobbySelection == null) return;
+
+        LobbyRemovalTask lobbyRemovalTask = new LobbyRemovalTask(this);
+        lobbyRemovalTask.runTaskTimer(BedWarsPlugin.getInstance(), 20, 20);
     }
 
     @Override
@@ -275,4 +286,14 @@ public class Game {
     public List<GameObserver> getGameObservers() {
         return gameObservers;
     }
+
+    public void setWaitingLobbySelection(CuboidSelection waitingLobbySelection) {
+        this.waitingLobbySelection = waitingLobbySelection;
+    }
+
+    public CuboidSelection getWaitingLobbySelection() {
+        return waitingLobbySelection;
+    }
+
+
 }

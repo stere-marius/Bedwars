@@ -1,5 +1,6 @@
 package ro.marius.bedwars.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,18 +62,11 @@ public class GameCuboidSelect implements Listener {
             e.setCancelled(true);
         }
 
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if ((gameSetup.getSteps() == 0) && (gameSetup.getPositionOne() != null) && (gameSetup.getPositionTwo() != null)) {
-                    p.setItemInHand(null);
-                    gameSetup.addStep();
-                    gameSetup.sendAvailableCommands();
-                }
-
+        Bukkit.getScheduler().runTaskLater(BedWarsPlugin.getInstance(), () -> {
+            if (gameSetup.getPositionOne() != null && gameSetup.getPositionTwo() != null) {
+                gameSetup.performCuboidSelection();
             }
-        }.runTaskLater(BedWarsPlugin.getInstance(), 10);
+        }, 10L);
 
     }
 

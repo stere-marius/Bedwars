@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import ro.marius.bedwars.commands.CommandManager;
 import ro.marius.bedwars.configuration.*;
@@ -12,8 +13,9 @@ import ro.marius.bedwars.manager.type.ListenerManager;
 import ro.marius.bedwars.manager.type.VersionManager;
 import ro.marius.bedwars.menu.ExtraInventory;
 import ro.marius.bedwars.mysql.MySQL;
-import ro.marius.bedwars.party.BedwarsPartyHandler;
 import ro.marius.bedwars.party.PartyHandler;
+import ro.marius.bedwars.party.bedwars.BedwarsPartyHandler;
+import ro.marius.bedwars.party.parties_api.PartiesApiPartyHandler;
 import ro.marius.bedwars.playerdata.APlayerData;
 import ro.marius.bedwars.playerdata.FileData;
 import ro.marius.bedwars.playerdata.SQLData;
@@ -22,10 +24,7 @@ import ro.marius.bedwars.utils.FileUtils;
 import ro.marius.bedwars.utils.PAPIExtension;
 import ro.marius.bedwars.utils.Utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -75,7 +74,7 @@ public class BedWarsPlugin extends JavaPlugin {
         new ManagerHandler(this);
         new DefaultConfig().loadConfiguration();
         new TeamSelectorConfiguration().loadConfiguration();
-        new CommandManager().registerCommands();
+        new CommandManager(this).registerCommands();
 
         // wait until server loads with these things
         this.getServer().getScheduler().runTask(this, () -> {
@@ -106,6 +105,8 @@ public class BedWarsPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PAPIExtension().register();
         }
+
+        readPartyHandler();
     }
 
     public void saveDefaultConfiguration() {
@@ -161,10 +162,6 @@ public class BedWarsPlugin extends JavaPlugin {
         this.setupDatabaseHealthCheck();
     }
 
-    // TODO: Shuffle teams formula: players / teams
-    // daca players / playersPerTeam
-    // 3v3: 4 -> 4/2 -> 2v2
-    // 3v3v3: 5 -> 5/3 ->
 
     public void setupDatabaseHealthCheck() {
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
@@ -207,12 +204,30 @@ public class BedWarsPlugin extends JavaPlugin {
         return partyHandler;
     }
 
+    // TODO: Refactor
     public void readPartyHandler() {
 
         String adapter = getConfig().getString("PartyAdapter", "BEDWARS_ADAPTER");
 
         if (adapter.equalsIgnoreCase("PARTY_AND_FRIENDS_ADAPTER")) {
-            partyHandler = new BedwarsPartyHandler();//TODO
+            partyHandler = new BedwarsPartyHandler();//TODO Add support for PARTY_AND_FRIENDS API
+            return;
+        }
+
+        if (adapter.equalsIgnoreCase("PARTIES_ADAPTER")) {
+
+            Plugin partiesPlugin = this.getServer().getPluginManager().getPlugin("Parties");
+
+            if (partiesPlugin == null || !partiesPlugin.isEnabled()) {
+                Bukkit
+                        .getConsoleSender()
+                        .sendMessage(Utils.translate("&c&lBEDWARS>> Could not enable the party adapter. Parties plugin not found. Fallback to default party adapter."));
+                partyHandler = new BedwarsPartyHandler();
+                return;
+            }
+
+            Bukkit.getConsoleSender().sendMessage(Utils.translate("&c&lBEDWARS>> Enabled support for Parties plugin."));
+            partyHandler = new PartiesApiPartyHandler();
         }
 
     }

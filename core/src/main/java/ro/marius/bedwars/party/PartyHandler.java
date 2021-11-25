@@ -8,18 +8,18 @@ public interface PartyHandler {
 
     boolean hasParty(Player player);
 
-    Player getLeader(Player partyPlayer);
+    Player getLeader(Player player);
 
-    Set<Player> getMembers(Player partyPlayer);
+    Set<Player> getMembers(Player player);
 
-    void leave(Player partyPlayer);
+    void leave(Player player);
 
     void addMember(Player partyOwner, Player playerToAdd);
 
     void kickMember(Player partyOwner, Player playerToKick);
 
-    void disband(Player partyPlayer);
+    void disband(Player player);
 
-    void sendMessage(Player partyPlayer, String message);
+    void sendMessage(Player player, String message);
 
 }

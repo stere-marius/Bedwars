@@ -17,6 +17,7 @@ public class DefaultConfig {
         config.options().copyHeader(true);
         config.addDefault("WorldAdapter", "NORMAL_ADAPTER");
         config.addDefault("JoinArenaNpcAdapter", "BEDWARS");
+        config.addDefault("PartyAdapter", "BEDWARS_ADAPTER");
         config.addDefault("FastAsyncWorldEdit", false);
         config.addDefault("onJoin.TeleportToLobbyLocation", false);
         config.addDefault("ShoutCommand.Name", "shout");

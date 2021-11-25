@@ -1,8 +1,9 @@
-package ro.marius.bedwars.party;
+package ro.marius.bedwars.party.bedwars;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ro.marius.bedwars.configuration.Lang;
+import ro.marius.bedwars.party.PartyHandler;
 
 import java.util.*;
 
@@ -25,10 +26,7 @@ public class BedwarsPartyHandler implements PartyHandler {
 
         BedwarsParty bedwarsParty = partyMap.get(partyOwner.getUniqueId());
 
-        if (bedwarsParty == null)
-            return Collections.emptySet();
-
-        return bedwarsParty.getPlayerMembers();
+        return bedwarsParty == null ? Collections.emptySet() : bedwarsParty.getPlayerMembers();
     }
 
     @Override

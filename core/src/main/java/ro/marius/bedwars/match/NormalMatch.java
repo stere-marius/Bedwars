@@ -1,5 +1,6 @@
 package ro.marius.bedwars.match;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -235,6 +236,7 @@ public class NormalMatch extends AMatch {
                     NormalMatch.this.spawnAirGenerators();
                     NormalMatch.this.sendMessage(Lang.START_MESSAGE.getList());
                     NormalMatch.this.getEvent().startTask();
+                    Bukkit.getScheduler().runTaskLater(BedWarsPlugin.getInstance(), () -> getGame().startLobbyRemovalTask(), 10L);
                     return;
                 }
 

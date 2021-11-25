@@ -3,7 +3,6 @@ package ro.marius.bedwars.npc;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.NPC;
 import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.NPCSkin;
 
@@ -12,7 +11,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class SkinFetcher {
 

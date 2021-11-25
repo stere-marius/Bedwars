@@ -37,6 +37,11 @@
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="alessiodp-repo" />
+      <option name="name" value="alessiodp-repo" />
+      <option name="url" value="https://repo.alessiodp.com/releases/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="glaremasters" />
       <option name="name" value="glaremasters" />
       <option name="url" value="https://repo.glaremasters.me/repository/concuncan/" />

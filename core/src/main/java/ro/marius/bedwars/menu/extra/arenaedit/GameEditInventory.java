@@ -39,7 +39,7 @@ public class GameEditInventory extends ExtraInventory {
         Game game = gameEdit.getGame();
 
         Inventory inventory = Bukkit.createInventory(this, 54, Utils.translate("&eEditing arena " + game.getName()));
-        inventory.setItem(9, new SkullBuilder()
+        inventory.setItem(1, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzViOGIzZDhjNzdkZmI4ZmJkMjQ5NWM4NDJlYWM5NGZmZmE2ZjU5M2JmMTVhMjU3NGQ4NTRkZmYzOTI4In19fQ==")
                 .setDisplayName("&e&lName of the arena")
                 .setLore(
@@ -49,7 +49,7 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(11, new SkullBuilder()
+        inventory.setItem(3, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=")
                 .setDisplayName("&e&lWaiting location")
                 .setLore(
@@ -59,7 +59,7 @@ public class GameEditInventory extends ExtraInventory {
                 .build());
 
 
-        inventory.setItem(13, new SkullBuilder()
+        inventory.setItem(5, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWQxZTk5NzkyODlmMDMwOTlhN2M1ODdkNTJkNDg4ZTI2ZTdiYjE3YWI1OTRiNjlmOTI0MzhkNzdlYWJjIn19fQ==")
                 .setDisplayName("&e&lSpectate location")
                 .setLore(
@@ -68,20 +68,27 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lRIGHT &7click to teleport")
                 .build());
 
-        inventory.setItem(15, new ItemBuilder(XMaterial.IRON_BARS.parseMaterial())
+        inventory.setItem(7, new ItemBuilder(XMaterial.IRON_BARS.parseMaterial())
                 .setDisplayName("&e&lArena selection")
                 .setLore("",
                         "&e&lCLICK &7to open")
                 .build());
 
-        inventory.setItem(17, new ItemBuilder(XMaterial.DIAMOND_BLOCK.parseMaterial())
+
+        inventory.setItem(9, new ItemBuilder(XMaterial.IRON_BARS.parseMaterial())
+                .setDisplayName("&e&lWaiting lobby selection")
+                .setLore("",
+                        "&e&lCLICK &7to open")
+                .build());
+
+        inventory.setItem(11, new ItemBuilder(XMaterial.DIAMOND_BLOCK.parseMaterial())
                 .setDisplayName("&e&lDiamond Generators")
                 .setLore("",
                         "&e&lCLICK &7to open")
                 .build());
 
 
-        inventory.setItem(27, new SkullBuilder()
+        inventory.setItem(13, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTY3ZDgxM2FlN2ZmZTViZTk1MWE0ZjQxZjJhYTYxOWE1ZTM4OTRlODVlYTVkNDk4NmY4NDk0OWM2M2Q3NjcyZSJ9fX0==")
                 .setDisplayName("&e&lType of the arena")
                 .setLore("",
@@ -90,7 +97,7 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(29, new SkullBuilder()
+        inventory.setItem(15, new SkullBuilder()
                 .setDisplayName("&e&lNumber of players per team")
                 .setLore("",
                         "&7Current players per team: &e&l" + game.getPlayersPerTeam(),
@@ -98,21 +105,21 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(31, new ItemBuilder(XMaterial.COMMAND_BLOCK.parseMaterial())
+        inventory.setItem(17, new ItemBuilder(XMaterial.COMMAND_BLOCK.parseMaterial())
                 .setDisplayName("&e&lTeams settings")
                 .setLore("",
                         "&e&lCLICK &7to open")
                 .build());
 
 
-        inventory.setItem(33, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial())
+        inventory.setItem(19, new ItemBuilder(XMaterial.EMERALD_BLOCK.parseMaterial())
                 .setDisplayName("&e&lEmerald Generators")
                 .setLore("",
                         "&e&lCLICK &7to open"
                 )
                 .build());
 
-        inventory.setItem(35, new SkullBuilder()
+        inventory.setItem(21, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2E2ZTUzYmZiN2MxM2ZlZGJkZmU4OTY3NmY4MWZjMmNhNzk3NDYzNGE2ODQxNDFhZDFmNTE2NGYwZWRmNGEyIn19fQ==")
                 .setDisplayName("&e&lMinimum teams to start")
                 .setLore("",
@@ -121,13 +128,13 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(45, new ItemBuilder(XMaterial.BEACON.parseMaterial())
+        inventory.setItem(21, new ItemBuilder(XMaterial.BEACON.parseMaterial())
                 .setDisplayName("&e&lLobby CuboidSelection")
                 .setLore("",
                         "&e&lCLICK &7to open")
                 .build());
 
-        inventory.setItem(47, new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
+        inventory.setItem(23, new ItemBuilder(XMaterial.OAK_SIGN.parseMaterial())
                 .setDisplayName("&e&lScoreboard path")
                 .setLore("",
                         "&7Current path: &e&l" + game.getScoreboardPath(),
@@ -135,7 +142,7 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(49, new ItemBuilder(XMaterial.BIRCH_SIGN.parseMaterial())
+        inventory.setItem(25, new ItemBuilder(XMaterial.BIRCH_SIGN.parseMaterial())
                 .setDisplayName("&e&lShop path")
                 .setLore("",
                         "&7Current path: &e&l" + game.getShopPathName(),
@@ -143,7 +150,7 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(51, new ItemBuilder(XMaterial.ACACIA_SIGN.parseMaterial())
+        inventory.setItem(27, new ItemBuilder(XMaterial.ACACIA_SIGN.parseMaterial())
                 .setDisplayName("&e&lUpgrade path")
                 .setLore("",
                         "&7Current path: &e&l" + game.getUpgradePathName(),
@@ -151,7 +158,7 @@ public class GameEditInventory extends ExtraInventory {
                         "&e&lCLICK &7to set")
                 .build());
 
-        inventory.setItem(53, new SkullBuilder()
+        inventory.setItem(49, new SkullBuilder()
                 .withTexture("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ2OWUwNmU1ZGFkZmQ4NGU1ZjNkMWMyMTA2M2YyNTUzYjJmYTk0NWVlMWQ0ZDcxNTJmZGM1NDI1YmMxMmE5In19fQ==")
                 .setDisplayName("&e&lSave changes and exit")
                 .setLore("",
@@ -299,9 +306,9 @@ public class GameEditInventory extends ExtraInventory {
             return;
         }
 
-        if (displayName.equalsIgnoreCase("Lobby CuboidSelection")) {
-
-
+        if (displayName.equalsIgnoreCase("Waiting lobby selection")) {
+            LobbySelectionInventory lobbySelectionInventory = new LobbySelectionInventory(gameEdit);
+            p.openInventory(lobbySelectionInventory.getInventory());
             return;
         }
 

@@ -12,12 +12,21 @@ import java.util.Set;
 
 public class CommandManager {
 
+    private final BedWarsPlugin bedWarsPlugin;
+
+    public CommandManager(BedWarsPlugin bedWarsPlugin) {
+        this.bedWarsPlugin = bedWarsPlugin;
+    }
+
     public void registerCommands() {
 
         Set<AbstractCommand> abstractCommand = new HashSet<>();
         abstractCommand.add(new BedwarsCommand());
-        abstractCommand.add(new PartyCommand());
         abstractCommand.add(new ShoutCommand(BedWarsPlugin.getInstance().getConfig().getString("ShoutCommand.Name")));
+
+        if (bedWarsPlugin.getConfig().getString("PartyAdapter", "BEDWARS_ADAPTER").equalsIgnoreCase("BEDWARS_ADAPTER")) {
+            abstractCommand.add(new PartyCommand());
+        }
 
         try {
             Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");

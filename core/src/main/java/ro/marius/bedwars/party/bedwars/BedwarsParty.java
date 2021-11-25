@@ -1,4 +1,4 @@
-package ro.marius.bedwars.party;
+package ro.marius.bedwars.party.bedwars;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
