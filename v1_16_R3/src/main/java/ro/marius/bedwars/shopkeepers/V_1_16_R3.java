@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class V_1_16_R3 extends EntityVillager implements IShopKeepers {
 
-    public V_1_16_R3(EntityTypes<? extends EntityVillager> entityTypes, World world) {
+    public V_1_16_R3(World world) {
         super(EntityTypes.VILLAGER, world);
 
         Set<?> goalB = (LinkedHashSet<?>) ReflectionUtils.getPrivateField("d", PathfinderGoalSelector.class,

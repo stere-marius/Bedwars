@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class C_1_16_R3 extends EntityCreeper implements IShopKeepers {
 
-    public C_1_16_R3(EntityTypes<? extends EntityCreeper> type, World world) {
+    public C_1_16_R3(World world) {
         super(EntityTypes.CREEPER, world);
         Set<?> goalB = (LinkedHashSet<?>) ReflectionUtils.getPrivateField("d", PathfinderGoalSelector.class, this.goalSelector);
         goalB.clear();

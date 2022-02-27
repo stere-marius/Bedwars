@@ -39,7 +39,7 @@ public abstract class AMatch {
     private boolean isStarting, forceStart;
     private int startingTime;
     private BukkitTask startingTask;
-    private MatchState matchState = MatchState.IN_WAITING;
+    private MatchState matchState = MatchState.WAITING;
     private Set<Player> players = new HashSet<>();
     private Set<Player> spectators = new HashSet<>();
     private final Map<UUID, Team> playerTeam = new HashMap<>();
@@ -282,34 +282,13 @@ public abstract class AMatch {
             this.endGame("NO-PLAYERS");
         }
 
-        // daca este mai mult de 1 echipa
-        // si daca sunt jucatori in arena
-
-
-        // daca this.getPlayers().size() <= this.getGame().getPlayersPerTeam()
-        // se poate ajunge cand exista doua echipe cu cate un jucator si se incheie meciul
-
-
-//        if ((this.getPlayers().size() <= this.getGame().getPlayersPerTeam()) && (this.getRejoinMap().size() <= 1)) {
-//
-//            Iterator<Entry<UUID, Team>> it = this.getRejoinMap().entrySet().iterator();
-//
-//            if (it.hasNext()) {
-//                Entry<UUID, Team> entry = it.next();
-//                this.getPlayerTeam().remove(entry.getKey());
-//                this.getEliminatedTeams().add(entry.getValue());
-//            }
-//
-//            this.endGame("NORMAL");
-//        }
-
     }
 
     public void setCancelledTask() {
 
         if ((new HashSet<>(this.getPlayerTeam().values()).size() < this.game.getMinTeamsToStart())
                 && (!this.isForceStart() || this.getPlayers().isEmpty()) && this.isStarting()
-                && (this.getMatchState() == MatchState.IN_WAITING)) {
+                && (this.getMatchState() == MatchState.WAITING)) {
             this.cancelTask(this.getStartingTask());
             this.setStartingTime(this.getGame().getArenaStartingTime().get(0));
             this.sendMessage(Lang.START_CANCELLED.getString());
@@ -369,19 +348,6 @@ public abstract class AMatch {
         return findTeamByEmptySize(1);
     }
 
-    public Team findEmptyTeam() {
-
-        for (Team team : this.teams) {
-
-            if (!team.getPlayers().isEmpty()) {
-                continue;
-            }
-
-            return team;
-        }
-
-        return null;
-    }
 
     public void removeFromTeam(Player p) {
         Team team = this.playerTeam.get(p.getUniqueId());
@@ -393,7 +359,7 @@ public abstract class AMatch {
         team.getPlayers().remove(p);
         this.playerTeam.remove(p.getUniqueId());
 
-        if (this.getMatchState() == MatchState.IN_WAITING) {
+        if (this.getMatchState() == MatchState.WAITING) {
             return;
         }
         if (!team.getPlayers().isEmpty()) {
@@ -489,6 +455,10 @@ public abstract class AMatch {
         team.getPlayers().remove(p);
         this.getPlayerTeam().remove(p.getUniqueId());
         this.addToSpectator(p);
+        MatchData data = this.getMatchData(p);
+        data.addBedLost();
+        data.addFinalDeath();
+        game.getArenaOptions().performCommands("LoserCommands", p);
 
         if (!team.getPlayers().isEmpty()) {
             return;
@@ -498,7 +468,7 @@ public abstract class AMatch {
                 .replace("<team>", team.getName()));
         this.getPlayerTeam().values().removeAll(Collections.singletonList(team));
         this.getEliminatedTeams().add(team);
-        this.isRequiredEnding();
+//        this.isRequiredEnding();
 
     }
 

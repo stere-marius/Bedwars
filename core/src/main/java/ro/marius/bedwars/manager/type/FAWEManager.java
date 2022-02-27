@@ -1,23 +1,14 @@
 package ro.marius.bedwars.manager.type;
 
-import com.boydti.fawe.FaweAPI;
-import com.boydti.fawe.object.schematic.Schematic;
-import com.sk89q.worldedit.BlockVector;
 import org.bukkit.Location;
-import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.game.Game;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class FAWEManager {
 
-    private static Map<Game, BlockVector> centerLocation = new HashMap<>();
-    private static Map<Game, Schematic> gameSchematic = new HashMap<>();
+//    private static Map<Game, BlockVector> centerLocation = new HashMap<>();
+//    private static Map<Game, Schematic> gameSchematic = new HashMap<>();
 
-    @SuppressWarnings("deprecation")
+//    @SuppressWarnings("deprecation")
     public static boolean saveSchematic(org.bukkit.World bukkitWorld, Location pos1, Location pos2, String arenaName) {
 
 //        World world = new BukkitWorld(bukkitWorld);
@@ -84,47 +75,47 @@ public final class FAWEManager {
 //        return centerVector;
 //    }
 
-    public static Schematic getSchematic(Game game) throws IOException {
-
-        Schematic schematic = gameSchematic.get(game);
-
-        if (schematic == null) {
-
-            File file = new File(BedWarsPlugin.getInstance().getDataFolder() + File.separator + "schematics",
-                    game.getName() + ".schematic");
-
-            Schematic schem = FaweAPI.load(file);
-            gameSchematic.put(game, schem);
-
-            return schem;
-        }
-
-        return schematic;
-    }
+//    public static Schematic getSchematic(Game game) throws IOException {
+//
+//        Schematic schematic = gameSchematic.get(game);
+//
+//        if (schematic == null) {
+//
+//            File file = new File(BedWarsPlugin.getInstance().getDataFolder() + File.separator + "schematics",
+//                    game.getName() + ".schematic");
+//
+//            Schematic schem = FaweAPI.load(file);
+//            gameSchematic.put(game, schem);
+//
+//            return schem;
+//        }
+//
+//        return schematic;
+//    }
 
 
     public static boolean loadSchematic(Game game) {
-
-        File file = new File(BedWarsPlugin.getInstance().getDataFolder() + File.separator + "schematics",
-                game.getName() + ".schematic");
-
-        if (!file.exists()) {
-            return false;
-        }
-
-        Schematic schem = null;
-
-        try {
-            schem = FaweAPI.load(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        gameSchematic.put(game, schem);
-
-        return true;
-
+//
+//        File file = new File(BedWarsPlugin.getInstance().getDataFolder() + File.separator + "schematics",
+//                game.getName() + ".schematic");
+//
+//        if (!file.exists()) {
+//            return false;
+//        }
+//
+//        Schematic schem = null;
+//
+//        try {
+//            schem = FaweAPI.load(file);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//        gameSchematic.put(game, schem);
+//
+        return false;
+//
     }
 
     public static void pasteSchematic(org.bukkit.World world, Game game) {

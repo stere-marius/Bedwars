@@ -16,8 +16,16 @@ public class ArenaData {
     private int losses;
     private Map<Integer, String> quickBuy = new HashMap<>();
 
-    public ArenaData(int gamesPlayed, int bedsBroken, int bedsLost, int kills, int deaths, int finalKills,
-                     int finalDeaths, int wins, int losses, Map<Integer, String> quickBuy) {
+    public ArenaData(int gamesPlayed,
+                     int bedsBroken,
+                     int bedsLost,
+                     int kills,
+                     int deaths,
+                     int finalKills,
+                     int finalDeaths,
+                     int wins,
+                     int losses,
+                     Map<Integer, String> quickBuy) {
         this.gamesPlayed = gamesPlayed;
         this.bedsBroken = bedsBroken;
         this.bedsLost = bedsLost;

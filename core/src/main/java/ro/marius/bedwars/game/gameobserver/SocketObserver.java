@@ -23,11 +23,9 @@ public class SocketObserver implements GameObserver {
 
         AMatch match = game.getMatch();
         ClientSocket clientSocket = ManagerHandler.getSocketManager().getSocket();
-        UUID uuid = ManagerHandler.getSocketManager().getUUID();
 
         Gson gson = new Gson();
         Map<String, Object> gsonMap = new HashMap<>();
-        gsonMap.put("ServerUUID", uuid.toString());
         gsonMap.put("ServerIP", Bukkit.getServer().getIp());
         gsonMap.put("ServerPort", Bukkit.getServer().getPort());
         gsonMap.put("GameName", game.getName());
@@ -35,6 +33,7 @@ public class SocketObserver implements GameObserver {
         gsonMap.put("PlayersPerTeam", game.getPlayersPerTeam());
         gsonMap.put("MatchState", match.getMatchState().name());
         gsonMap.put("MatchPlayers", match.getPlayers().size());
+        gsonMap.put("MaxPlayers", match.getGame().getMaxPlayers());
         Set<String> rejoinList = new HashSet<>();
         match.getRejoinMap().keySet().forEach(playerUUID -> rejoinList.add(playerUUID.toString()));
         gsonMap.put("RejoinUUID", rejoinList);
@@ -43,6 +42,8 @@ public class SocketObserver implements GameObserver {
         gsonMap.put("SpectatorUUID", spectatorsList);
 
         String jsonObject = gson.toJson(gsonMap);
+
+        if (clientSocket == null) return;
 
         clientSocket.sendMessage(jsonObject);
     }

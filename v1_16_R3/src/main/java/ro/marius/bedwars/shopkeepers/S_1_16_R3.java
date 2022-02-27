@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class S_1_16_R3 extends EntitySkeleton implements IShopKeepers {
 
-    public S_1_16_R3(EntityTypes<? extends EntitySkeleton> type, World world) {
+    public S_1_16_R3(World world) {
         super(EntityTypes.SKELETON, world);
         Set<?> goalB = (LinkedHashSet<?>) ReflectionUtils.getPrivateField("d", PathfinderGoalSelector.class,
                 this.goalSelector);
@@ -40,7 +40,7 @@ public class S_1_16_R3 extends EntitySkeleton implements IShopKeepers {
     @Override
     public void setOnFire(int i, boolean callEvent) {
 
-        
+
     }
 
     @Override

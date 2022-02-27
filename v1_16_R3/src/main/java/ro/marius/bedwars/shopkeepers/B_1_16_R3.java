@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class B_1_16_R3 extends EntityBlaze implements IShopKeepers {
 
-    public B_1_16_R3(EntityTypes<? extends EntityBlaze> type, World world) {
+    public B_1_16_R3(World world) {
         super(EntityTypes.BLAZE, world);
         Set<?> goalB = (LinkedHashSet<?>) ReflectionUtils.getPrivateField("d", PathfinderGoalSelector.class, this.goalSelector);
         goalB.clear();

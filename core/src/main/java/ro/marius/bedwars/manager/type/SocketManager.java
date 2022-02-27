@@ -57,13 +57,13 @@ public class SocketManager {
             @Override
             public void run() {
 
-                if (this.i == 10) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED
-                            + "[Bedwars] Could not establish the connection with the lobby socket. Your lobby server might be closed.");
-                    SocketManager.this.socket = null;
-                    this.cancel();
-                    return;
-                }
+//                if (this.i == 10) {
+//                    Bukkit.getConsoleSender().sendMessage(ChatColor.RED
+//                            + "[Bedwars] Could not establish the connection with the lobby socket. Your lobby server might be closed.");
+//                    SocketManager.this.socket = null;
+//                    this.cancel();
+//                    return;
+//                }
 
                 if (!SocketManager.this.socket.establishConnection()) {
                     Bukkit.getConsoleSender().sendMessage(ChatColor.RED
@@ -77,10 +77,24 @@ public class SocketManager {
                 SocketManager.this.socket.start();
                 ManagerHandler.getGameManager().getGames().forEach(Game::notifyObservers);
                 this.cancel();
-
+                checkSocketConnection();
             }
-        }.runTaskTimer(BedWarsPlugin.getInstance(), 120, 120);
+        }.runTaskTimer(BedWarsPlugin.getInstance(), 20 * 10, 20 * 10);
 
+    }
+
+    private void checkSocketConnection(){
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if(ClientSocket.runThread && !socket.sendMessage("TEST CONNECTION")){
+                    ClientSocket.runThread = false;
+                    socket.interrupt();
+                    this.cancel();
+                    setupSocket();
+                }
+            }
+        }.runTaskTimer(BedWarsPlugin.getInstance(), 20 * 60, 20 * 60);
     }
 
     public ClientSocket getSocket() {

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ro.marius.bedwars.party.PartyHandler;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class PartiesApiPartyHandler implements PartyHandler {
         if(partyPlayer == null) return null;
 
         Party party = partiesAPI.getParty(partyPlayer.getPartyId());
-        Bukkit.broadcastMessage("The leader is " + Bukkit.getPlayer(party.getLeader()).getName());
+
         return Bukkit.getPlayer(party.getLeader());
     }
 
@@ -39,9 +40,10 @@ public class PartiesApiPartyHandler implements PartyHandler {
                 .getMembers()
                 .stream()
                 .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         Bukkit.broadcastMessage("Party's members");
-        players.forEach(p -> Bukkit.broadcastMessage(p.getName()));
+        players.forEach(p -> Bukkit.broadcastMessage(p == null ? "Player not online" : p.getName()));
         return players;
     }
 

@@ -50,11 +50,19 @@ public class SpectatorSettings extends ExtraInventory {
         inv.setItem(15, diamondBoots.build());
 
         ItemBuilder autoTeleport = new ItemBuilder(XMaterial.COMPASS.parseMaterial())
-                .setDisplayName("&aEnable Auto Teleport").setLore("&7Click to enable auto teleport!");
+                .setDisplayName(this.matchSpectator.isAutoTeleport() ? "&cDisable" : ("&aEnable" + " Auto Teleport"))
+                .setLore("&7Click to " + (this.matchSpectator.isAutoTeleport() ? "disable" : "enable")
+                        + " auto teleport!");
+
         ItemBuilder nightVision = new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-                .setDisplayName("&aEnable night vision").setLore("&7Click to enable night vision!");
+                .setDisplayName(this.matchSpectator.hasNightVision() ? "&cDisable" : ("&aEnable" + " night vision"))
+                .setLore(
+                        "&7Click to " + (this.matchSpectator.hasNightVision() ? "disable" : "enable") + " night vision!");
+
         ItemBuilder alwaysFlying = new ItemBuilder(XMaterial.FEATHER.parseMaterial())
-                .setDisplayName("&aEnable always flying").setLore("&7Click to enable always flying.");
+                .setDisplayName(this.matchSpectator.hasNightVision() ? "&cDisable" : ("&aEnable" + " always flying"))
+                .setLore(
+                        "&7Click to " + (this.matchSpectator.hasNightVision() ? "disable" : "enable") + " always flying!");
 
         inv.setItem(21, autoTeleport.build());
         inv.setItem(22, nightVision.build());
@@ -120,11 +128,11 @@ public class SpectatorSettings extends ExtraInventory {
 
         if (slot == 22) {
 
-            this.matchSpectator.setNightVision(!this.matchSpectator.isNightVision());
+            this.matchSpectator.setHasNightVision(!this.matchSpectator.hasNightVision());
             ItemBuilder nightVision = new ItemBuilder(XMaterial.ENDER_EYE.parseMaterial())
-                    .setDisplayName(this.matchSpectator.isNightVision() ? "&cDisable" : ("&aEnable" + " night vision"))
+                    .setDisplayName(this.matchSpectator.hasNightVision() ? "&cDisable" : ("&aEnable" + " night vision"))
                     .setLore(
-                            "&7Click to " + (this.matchSpectator.isNightVision() ? "disable" : "enable") + " night vision!");
+                            "&7Click to " + (this.matchSpectator.hasNightVision() ? "disable" : "enable") + " night vision!");
             this.getInventory().setItem(22, nightVision.build());
 
             return;
@@ -132,11 +140,11 @@ public class SpectatorSettings extends ExtraInventory {
 
         if (slot == 23) {
 
-            this.matchSpectator.setFly(!this.matchSpectator.isFly());
+            this.matchSpectator.setHasFly(!this.matchSpectator.hasFly());
             ItemBuilder alwaysFlying = new ItemBuilder(XMaterial.FEATHER.parseMaterial())
-                    .setDisplayName(this.matchSpectator.isNightVision() ? "&cDisable" : ("&aEnable" + " always flying"))
+                    .setDisplayName(this.matchSpectator.hasFly() ? "&cDisable" : ("&aEnable" + " always flying"))
                     .setLore(
-                            "&7Click to " + (this.matchSpectator.isNightVision() ? "disable" : "enable") + " always flying!");
+                            "&7Click to " + (this.matchSpectator.hasFly() ? "disable" : "enable") + " always flying!");
             this.getInventory().setItem(23, alwaysFlying.build());
 
         }

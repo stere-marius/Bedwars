@@ -1,5 +1,7 @@
 package ro.marius.bedwars.socketclient;
 
+import org.bukkit.Bukkit;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,18 +30,21 @@ public class ClientSocket extends Thread {
             this.output = new DataOutputStream(this.socket.getOutputStream());
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return false;
         }
 
     }
 
-    public void sendMessage(String message) {
+    public boolean sendMessage(String message) {
         try {
             this.output.writeUTF(message);
             this.output.flush();
+            Bukkit.broadcastMessage("Sending server message " + message);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -57,7 +62,6 @@ public class ClientSocket extends Thread {
         System.out.println("Closing the streams and socket from client.");
 
         this.closeSocket();
-
     }
 
     public void closeSocket(){

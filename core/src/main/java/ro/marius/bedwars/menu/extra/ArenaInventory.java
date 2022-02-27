@@ -90,7 +90,7 @@ public class ArenaInventory extends PaginatedInventory {
         VersionWrapper versionWrapper = ManagerHandler.getVersionManager().getVersionWrapper();
 
         List<Game> games = ManagerHandler.getGameManager().getGames().stream()
-                .filter(g -> (g.getMatch().getMatchState() == MatchState.IN_WAITING) && !g.getMatch().isFull()
+                .filter(g -> (g.getMatch().getMatchState() == MatchState.WAITING) && !g.getMatch().isFull()
                         && (this.arenaType.isEmpty() || g.getArenaType().equals(this.arenaType)))
                 .collect(Collectors.toList());
 

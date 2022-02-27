@@ -19,6 +19,7 @@ import ro.marius.bedwars.party.parties_api.PartiesApiPartyHandler;
 import ro.marius.bedwars.playerdata.APlayerData;
 import ro.marius.bedwars.playerdata.FileData;
 import ro.marius.bedwars.playerdata.SQLData;
+import ro.marius.bedwars.shopkeepers.V_1_16_R3;
 import ro.marius.bedwars.socketclient.ClientSocket;
 import ro.marius.bedwars.utils.FileUtils;
 import ro.marius.bedwars.utils.PAPIExtension;
@@ -80,7 +81,10 @@ public class BedWarsPlugin extends JavaPlugin {
         this.getServer().getScheduler().runTask(this, () -> {
             BedWarsPlugin.this.setupFAWE();
             ManagerHandler.getHologramManager().spawnPlayersHologram();
-            ManagerHandler.getGameManager().loadGames(() -> ManagerHandler.getNPCManager().loadNPCGameObservers());
+            ManagerHandler.getGameManager().loadGames(() -> {
+                ManagerHandler.getNPCManager().loadNPCGameObservers();
+                ManagerHandler.getSocketManager().registerGameSocketObservers();
+            });
         });
 
         // load arena types

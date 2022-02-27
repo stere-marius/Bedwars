@@ -109,7 +109,7 @@ public class GameManager {
             if (match.isFull()) {
                 continue;
             }
-            if (match.getMatchState() != MatchState.IN_WAITING) {
+            if (match.getMatchState() != MatchState.WAITING) {
                 continue;
             }
             if (match.findAvailableTeam() == null) {
@@ -143,7 +143,7 @@ public class GameManager {
             if (match.isFull()) {
                 continue;
             }
-            if (match.getMatchState() != MatchState.IN_WAITING) {
+            if (match.getMatchState() != MatchState.WAITING) {
                 continue;
             }
             if (match.findAvailableTeam() == null) {

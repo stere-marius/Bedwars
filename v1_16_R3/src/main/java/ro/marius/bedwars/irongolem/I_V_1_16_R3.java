@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class I_V_1_16_R3 extends EntityIronGolem implements ICustomGolem {
 
-    public I_V_1_16_R3(EntityTypes<? extends EntityIronGolem> entityTypes, World world) {
+    public I_V_1_16_R3(World world) {
         super(EntityTypes.IRON_GOLEM, world);
     }
 

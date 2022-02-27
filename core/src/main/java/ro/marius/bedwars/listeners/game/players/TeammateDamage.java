@@ -36,7 +36,7 @@ public class TeammateDamage implements Listener {
         if (!pMatch.getGame().getName().equals(dMatch.getGame().getName())) {
             return;
         }
-        if (dMatch.getMatchState() == MatchState.IN_WAITING) {
+        if (dMatch.getMatchState() == MatchState.WAITING) {
             return;
         }
 

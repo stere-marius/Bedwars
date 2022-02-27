@@ -29,7 +29,7 @@ public class SpectatorToggleFly implements Listener {
             return;
         }
 
-        e.setCancelled(spectator.isFly());
+        e.setCancelled(spectator.hasFly());
 
     }
 

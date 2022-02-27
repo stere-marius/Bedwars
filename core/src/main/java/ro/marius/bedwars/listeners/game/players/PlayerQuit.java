@@ -30,7 +30,7 @@ public class PlayerQuit implements Listener {
             return;
         }
 
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
 
@@ -133,7 +133,7 @@ public class PlayerQuit implements Listener {
             return;
         }
 
-        if (match.getMatchState() != MatchState.IN_WAITING) {
+        if (match.getMatchState() != MatchState.WAITING) {
             return;
         }
 

@@ -14,8 +14,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ro.marius.bedwars.*;
 import ro.marius.bedwars.commands.subcommand.EditCommand;
@@ -27,8 +25,6 @@ import ro.marius.bedwars.game.Game;
 import ro.marius.bedwars.game.GameEdit;
 import ro.marius.bedwars.game.GameSetup;
 import ro.marius.bedwars.game.mechanics.TeamSetup;
-import ro.marius.bedwars.game.mechanics.worldadapter.SimpleWorldAdapter;
-import ro.marius.bedwars.generator.DiamondGenerator;
 import ro.marius.bedwars.listeners.GameEditListener;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.manager.type.FAWEManager;
@@ -37,14 +33,10 @@ import ro.marius.bedwars.match.MatchState;
 import ro.marius.bedwars.menu.extra.ArenaInventory;
 import ro.marius.bedwars.menu.extra.TeamSelectorInventory;
 import ro.marius.bedwars.playerdata.APlayerData;
-import ro.marius.bedwars.shopconfiguration.shopinventory.ShopInventory;
 import ro.marius.bedwars.team.Team;
-import ro.marius.bedwars.upgradeconfiguration.upgradeinventory.UpgradeInventory;
 import ro.marius.bedwars.utils.*;
 import ro.marius.bedwars.utils.itembuilder.ItemBuilder;
-import ro.marius.bedwars.utils.itembuilder.PotionBuilder;
 
-import java.io.File;
 import java.util.*;
 
 public class BedwarsCommand extends AbstractCommand {
@@ -311,7 +303,7 @@ public class BedwarsCommand extends AbstractCommand {
                 return;
             }
 
-            game.getMatch().setMatchState(MatchState.IN_WAITING);
+            game.getMatch().setMatchState(MatchState.WAITING);
             p.sendMessage(Utils.translate("&a>> The arena " + args[1] + " has been opened"));
             return;
         }
@@ -460,6 +452,25 @@ public class BedwarsCommand extends AbstractCommand {
             return;
         }
 
+        if ("spectateArena".equalsIgnoreCase(args[0])) {
+
+            if (args.length < 2) {
+                p.sendMessage(this.insfArgs + " spectateArena <arenaName>");
+                return;
+            }
+
+            Game game = ManagerHandler.getGameManager().getGame(args[1]);
+
+            if (game == null) {
+                p.sendMessage(Utils.translate("&cThe arena " + args[1] + " does not exist."));
+                return;
+            }
+
+            game.getMatch().addToSpectator(p);
+
+            return;
+        }
+
         if ("showPlayer".equalsIgnoreCase(args[0])) {
 
             for (Player pl : Bukkit.getOnlinePlayers()) {
@@ -496,8 +507,8 @@ public class BedwarsCommand extends AbstractCommand {
                 return;
             }
 
-            game.getMatch().setMatchState(MatchState.IN_WAITING);
-            p.sendMessage("&eThe arena state has been setting to IN_WAITING");
+            game.getMatch().setMatchState(MatchState.WAITING);
+            p.sendMessage("&eThe arena state has been setting to WAITING");
 
             return;
         }
@@ -855,7 +866,7 @@ public class BedwarsCommand extends AbstractCommand {
             }
 
             MatchState matchState = game.getMatch().getMatchState();
-            boolean canClone = matchState == MatchState.IN_WAITING || matchState == MatchState.CLOSED;
+            boolean canClone = matchState == MatchState.WAITING || matchState == MatchState.CLOSED;
 
             if (!canClone) {
                 p.sendMessage(Utils.translate("&cA match is being played in this arena. You can't clone it for the moment."));
@@ -1202,7 +1213,7 @@ public class BedwarsCommand extends AbstractCommand {
                 return;
             }
 
-            if (game.getMatch().getMatchState() != MatchState.IN_WAITING) {
+            if (game.getMatch().getMatchState() != MatchState.WAITING) {
                 p.sendMessage(Utils.translate("&cCouldn't delete the arena. There is a match ongoing in this arena."));
                 return;
             }

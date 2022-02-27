@@ -156,23 +156,10 @@ public class MySQL {
 
         this.openConnection();
 
-        Statement statement = null;
-
-        try {
-            statement = this.connection.createStatement();
+        try (Statement statement = this.connection.createStatement()) {
             statement.execute(sql);
         } catch (SQLException e) {
-
             e.printStackTrace();
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
@@ -180,26 +167,13 @@ public class MySQL {
 
         this.openConnection();
 
-        PreparedStatement statement = null;
 
         try {
-            try {
-                statement = this.connection.prepareStatement(sql);
+            try (PreparedStatement statement = this.connection.prepareStatement(sql)) {
                 statement.executeUpdate();
-
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                if (statement != null) {
-                    try {
-                        statement.close();
-                    } catch (SQLException e) {
-
-                        e.printStackTrace();
-                    }
-                }
             }
-
         } finally {
             this.disconnect();
         }
@@ -244,35 +218,15 @@ public class MySQL {
     public boolean contains(String tableName, String whereColumn, UUID uuid) {
 
         this.openConnection();
+        String sql = "SELECT * FROM `" + tableName + "` WHERE " + whereColumn + " = '" + uuid + "'";
 
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            statement = this.connection.createStatement();
-            String sql = "SELECT * FROM `" + tableName + "` WHERE " + whereColumn + " = '" + uuid + "'";
-            resultSet = statement.executeQuery(sql);
+        try (Statement statement = this.connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-
-                    e.printStackTrace();
-                }
-            }
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-
-                    e.printStackTrace();
-                }
-            }
-
             this.disconnect();
         }
     }

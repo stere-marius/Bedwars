@@ -31,7 +31,7 @@ public class PlayerKnockback implements Listener {
         Player p = (Player) e.getEntity();
         Player damager = (Player) e.getDamager();
 
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
 

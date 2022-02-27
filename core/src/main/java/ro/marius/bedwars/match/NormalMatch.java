@@ -49,12 +49,16 @@ public class NormalMatch extends AMatch {
             return;
         }
 
-        if (this.getMatchState() != MatchState.IN_WAITING) {
+        if (this.getMatchState() != MatchState.WAITING) {
             p.sendMessage(Lang.GAME_IS_STARTED.getString());
             return;
         }
 
-        if (BedWarsPlugin.getPartyHandler().hasParty(p) && BedWarsPlugin.getPartyHandler().getLeader(p).getName().equals(p.getName())) {
+        boolean hasParty = BedWarsPlugin.getPartyHandler().hasParty(p);
+        Player partyLeader = BedWarsPlugin.getPartyHandler().getLeader(p);
+        boolean isPartyLeader = partyLeader != null && partyLeader.getName().equals(p.getName());
+
+        if (hasParty && isPartyLeader) {
             addParty(p);
             return;
         }
@@ -179,22 +183,19 @@ public class NormalMatch extends AMatch {
     @Override
     public void addToSpectator(Player p) {
 
-        Game game = this.getGame();
-        MatchData data = this.getMatchData(p);
-        data.addBedLost();
-        data.addFinalDeath();
-        game.getArenaOptions().performCommands("LoserCommands", p);
+        ManagerHandler.getGameManager().getPlayerMatch().putIfAbsent(p.getUniqueId(), this);
         p.getInventory().clear();
         p.getInventory().setArmorContents(null);
         p.setHealth(20.0);
-        p.teleport(game.getSpectateLocation().getLocation());
+        p.teleport(this.getGame().getSpectateLocation().getLocation());
         this.getSpectators().add(p);
         this.getPermanentSpectators().add(new MatchSpectator(this, p));
         this.getPlayers().remove(p);
         this.getPlayers().forEach(players -> ManagerHandler.getVersionManager().getVersionWrapper().hidePlayer(players, p, BedWarsPlugin.getInstance()));
+        ManagerHandler.getVersionManager().getVersionWrapper().setCollidable(p, false);
+        ManagerHandler.getVersionManager().getVersionWrapper().hidePlayer(p);
         p.setAllowFlight(true);
         p.setFlying(true);
-        ManagerHandler.getVersionManager().getVersionWrapper().setCollidable(p, false);
 
         new BukkitRunnable() {
 
@@ -206,6 +207,8 @@ public class NormalMatch extends AMatch {
 
             }
         }.runTaskLater(BedWarsPlugin.getInstance(), 20);
+
+
 
     }
 
@@ -228,14 +231,14 @@ public class NormalMatch extends AMatch {
 
                 if (NormalMatch.this.getStartingTime() == 0) {
                     this.cancel();
-                    NormalMatch.this.setMatchState(MatchState.IN_GAME);
-                    NormalMatch.this.setForceStart(false);
-                    NormalMatch.this.setupPlayers();
-                    NormalMatch.this.setupTeams();
-                    NormalMatch.this.spawnNPC();
-                    NormalMatch.this.spawnAirGenerators();
-                    NormalMatch.this.sendMessage(Lang.START_MESSAGE.getList());
-                    NormalMatch.this.getEvent().startTask();
+                    setMatchState(MatchState.IN_GAME);
+                    setForceStart(false);
+                    setupPlayers();
+                    setupTeams();
+                    spawnNPC();
+                    spawnAirGenerators();
+                    sendMessage(Lang.START_MESSAGE.getList());
+                    getEvent().startTask();
                     Bukkit.getScheduler().runTaskLater(BedWarsPlugin.getInstance(), () -> getGame().startLobbyRemovalTask(), 10L);
                     return;
                 }

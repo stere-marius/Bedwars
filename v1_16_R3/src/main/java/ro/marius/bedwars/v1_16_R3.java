@@ -3,6 +3,7 @@ package ro.marius.bedwars;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.v1_16_R3.*;
 import net.minecraft.server.v1_16_R3.PacketPlayOutPlayerInfo.EnumPlayerInfoAction;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,6 +13,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.block.data.type.Bed.Part;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -34,17 +36,6 @@ import java.util.Set;
 
 public class v1_16_R3 implements VersionWrapper {
 
-    private CustomEntityType_1_16_R3<B_1_16_R3> blaze;
-    private CustomEntityType_1_16_R3<C_1_16_R3> creeper;
-    private CustomEntityType_1_16_R3<S_1_16_R3> skeleton;
-    private CustomEntityType_1_16_R3<V_1_16_R3> villager;
-    private CustomEntityType_1_16_R3<Z_1_16_R3> zombie;
-    private CustomEntityType_1_16_R3<ZP_1_16_R3> pigman;
-    private CustomEntityType_1_16_R3<I_V_1_16_R3> golem;
-
-    public v1_16_R3() {
-        this.registerEntities();
-    }
 
     @Override
     public void sendTitle(Player p, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle,
@@ -165,27 +156,6 @@ public class v1_16_R3 implements VersionWrapper {
         return bedBlocks;
     }
 
-    public void registerEntities() {
-
-        this.villager = new CustomEntityType_1_16_R3<>("bedwars_villager", V_1_16_R3.class, EntityTypes.VILLAGER, V_1_16_R3::new);
-        this.villager.register(EnumCreatureType.CREATURE);
-        this.golem = new CustomEntityType_1_16_R3<>("bedwars_golem", I_V_1_16_R3.class, EntityTypes.IRON_GOLEM, I_V_1_16_R3::new);
-        this.golem.register(EnumCreatureType.MISC);
-        this.skeleton = new CustomEntityType_1_16_R3<>("bedwars_skeleton", S_1_16_R3.class, EntityTypes.SKELETON, S_1_16_R3::new);
-        this.skeleton.register(EnumCreatureType.MONSTER);
-        this.blaze = new CustomEntityType_1_16_R3<>("bedwars_blaze", B_1_16_R3.class, EntityTypes.BLAZE, B_1_16_R3::new);
-        this.blaze.register(EnumCreatureType.MONSTER);
-        this.creeper = new CustomEntityType_1_16_R3<>("bedwars_creeper", C_1_16_R3.class, EntityTypes.CREEPER, C_1_16_R3::new);
-        this.creeper.register(EnumCreatureType.MONSTER);
-        this.zombie = new CustomEntityType_1_16_R3<>("bedwars_zombie", Z_1_16_R3.class, EntityTypes.ZOMBIE, Z_1_16_R3::new);
-        this.zombie.register(EnumCreatureType.MONSTER);
-        this.pigman = new CustomEntityType_1_16_R3<>("bedwars_creeper", ZP_1_16_R3.class, EntityTypes.ZOMBIFIED_PIGLIN, ZP_1_16_R3::new);
-        this.pigman.register(EnumCreatureType.MONSTER);
-    }
-
-    public void unregisterEntities() {
-        this.blaze.unregister();
-    }
 
     @Override
     public int getPing(Player p) {
@@ -275,43 +245,71 @@ public class v1_16_R3 implements VersionWrapper {
     @Override
     public Villager spawnVillager(Location loc) {
 
-        return (Villager) this.villager.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        V_1_16_R3 villager = new V_1_16_R3(world);
+        villager.spawn(loc);
+
+        return (Villager) villager.getBukkitEntity();
     }
 
     @Override
     public Blaze spawnBlaze(Location loc) {
 
-        return (Blaze) this.blaze.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        B_1_16_R3 blaze = new B_1_16_R3(world);
+        blaze.spawn(loc);
+
+        return (Blaze) blaze.getBukkitEntity();
     }
 
     @Override
     public Creeper spawnCreeper(Location loc) {
 
-        return (Creeper) this.creeper.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        C_1_16_R3 creeper = new C_1_16_R3(world);
+        creeper.spawn(loc);
+
+        return (Creeper) creeper.getBukkitEntity();
     }
 
     @Override
     public Skeleton spawnSkeleton(Location loc) {
 
-        return (Skeleton) this.skeleton.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        S_1_16_R3 skeleton = new S_1_16_R3(world);
+        skeleton.spawn(loc);
+
+        return (Skeleton) skeleton.getBukkitEntity();
     }
 
     @Override
     public IronGolem spawnGolem(Location loc) {
 
-        return (IronGolem) this.golem.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        I_V_1_16_R3 golem = new I_V_1_16_R3(world);
+        golem.spawn(loc);
+
+        return (IronGolem) golem.getBukkitEntity();
     }
 
     @Override
     public Zombie spawnZombie(Location loc) {
 
-        return (Zombie) this.zombie.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        Z_1_16_R3 zombie = new Z_1_16_R3(world);
+        zombie.spawn(loc);
+
+        return (Zombie) zombie.getBukkitEntity();
     }
 
     @Override
     public PigZombie spawnPigZombie(Location loc) {
 
-        return (PigZombie) this.pigman.spawn(loc);
+        WorldServer world = ((CraftWorld)loc.getWorld()).getHandle();
+        ZP_1_16_R3 pigman = new ZP_1_16_R3(world);
+        pigman.spawn(loc);
+
+        return (PigZombie) pigman.getBukkitEntity();
     }
 
     @Override

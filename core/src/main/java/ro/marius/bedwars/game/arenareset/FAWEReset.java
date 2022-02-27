@@ -9,7 +9,6 @@ import ro.marius.bedwars.game.Game;
 import ro.marius.bedwars.manager.type.FAWEManager;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.match.MatchState;
-import ro.marius.bedwars.match.NormalMatch;
 
 public class FAWEReset implements ArenaReset {
 
@@ -27,7 +26,7 @@ public class FAWEReset implements ArenaReset {
 
             @Override
             public void run() {
-                match.setMatchState(MatchState.IN_WAITING);
+                match.setMatchState(MatchState.WAITING);
             }
         }.runTaskLater(BedWarsPlugin.getInstance(), 30);
     }

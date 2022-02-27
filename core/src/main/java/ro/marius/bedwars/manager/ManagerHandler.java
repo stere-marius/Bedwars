@@ -1,21 +1,15 @@
 package ro.marius.bedwars.manager;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
 import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.game.Game;
-import ro.marius.bedwars.listeners.joinnpc.NPChunkListener;
-import ro.marius.bedwars.listeners.joinnpc.NPClick;
 import ro.marius.bedwars.manager.type.*;
 import ro.marius.bedwars.match.AMatch;
 import ro.marius.bedwars.match.MatchState;
 import ro.marius.bedwars.mysql.SQLManager;
 import ro.marius.bedwars.playerdata.APlayerData;
 import ro.marius.bedwars.utils.InventoryRestore;
-import ro.marius.bedwars.utils.Utils;
 
 import java.util.HashMap;
 
@@ -50,7 +44,7 @@ public class ManagerHandler {
 
         for (Game game : gameManager.getGames()) {
             AMatch match = game.getMatch();
-            if (match.getMatchState() == MatchState.IN_WAITING) {
+            if (match.getMatchState() == MatchState.WAITING) {
                 match.getPlayers().forEach(match::removePlayer);
             } else {
                 match.endGame("RESTART");

@@ -1,8 +1,11 @@
 package ro.marius.bedwars.game.mechanics;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import ro.marius.bedwars.game.Game;
 import ro.marius.bedwars.match.MatchState;
@@ -36,9 +39,7 @@ public class LobbyRemovalTask extends BukkitRunnable {
     @Override
     public void run() {
         if (blockSize <= 0) {
-            Bukkit.broadcastMessage("It took " + (int) TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - this.start) + " seconds!");
             cancel();
-            Bukkit.broadcastMessage("blockSize <= 0");
             return;
         }
 
@@ -47,12 +48,9 @@ public class LobbyRemovalTask extends BukkitRunnable {
             return;
         }
 
-        int blocksPerIteration = 30;
+        int blocksPerIteration = game.getWaitingLobbySelection().getBlocks().size() / 4;
+
         if (currentIndex * blocksPerIteration >= game.getWaitingLobbySelection().getBlocks().size()) {
-            game.getWaitingLobbySelection().getPositionOne().getChunk().unload();
-            game.getWaitingLobbySelection().getPositionTwo().getChunk().unload();
-            game.getWaitingLobbySelection().getPositionOne().getChunk().load();
-            game.getWaitingLobbySelection().getPositionOne().getChunk().load();
             cancel();
             Bukkit.broadcastMessage("It took " + (int) TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - this.start) + " seconds!");
             Bukkit.broadcastMessage("blockSize <= 0");
@@ -65,17 +63,10 @@ public class LobbyRemovalTask extends BukkitRunnable {
         for (int i = startIndex; i < endIndex; i++) {
             Block block = game.getWaitingLobbySelection().getBlocks().get(i);
             block.setType(material == null ? Material.AIR : material);
-            block.getState().update();
+            block.getState().update(true);
         }
 
         currentIndex++;
-        // 110
-
-        // 0 20 0
-        // 20 40 1
-        // 40 60 2
-        // 60 80 3
-        // 80 100 4
-        // 100 110 5
     }
+
 }

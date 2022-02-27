@@ -12,9 +12,9 @@ public class MatchSpectator {
     private AMatch match;
     private Player spectator;
 
-    private boolean autoTeleport;
-    private boolean fly;
-    private boolean nightVision;
+    private boolean isAutoTeleport;
+    private boolean hasFly;
+    private boolean hasNightVision;
     private BukkitTask task;
 
     public MatchSpectator(AMatch match, Player spectator) {
@@ -61,7 +61,7 @@ public class MatchSpectator {
 
                 double distance = MatchSpectator.this.spectator.getLocation().distance(target.getLocation());
 
-                if ((distance >= 10) && MatchSpectator.this.autoTeleport) {
+                if ((distance >= 10) && MatchSpectator.this.isAutoTeleport) {
                     MatchSpectator.this.spectator.teleport(target);
                 }
 
@@ -92,27 +92,27 @@ public class MatchSpectator {
     }
 
     public boolean isAutoTeleport() {
-        return this.autoTeleport;
+        return this.isAutoTeleport;
     }
 
     public void setAutoTeleport(boolean autoTeleport) {
-        this.autoTeleport = autoTeleport;
+        this.isAutoTeleport = autoTeleport;
     }
 
-    public boolean isFly() {
-        return this.fly;
+    public boolean hasFly() {
+        return this.hasFly;
     }
 
-    public void setFly(boolean fly) {
-        this.fly = fly;
+    public void setHasFly(boolean hasFly) {
+        this.hasFly = hasFly;
     }
 
-    public boolean isNightVision() {
-        return this.nightVision;
+    public boolean hasNightVision() {
+        return this.hasNightVision;
     }
 
-    public void setNightVision(boolean nightVision) {
-        this.nightVision = nightVision;
+    public void setHasNightVision(boolean hasNightVision) {
+        this.hasNightVision = hasNightVision;
     }
 
     public BukkitTask getTask() {

@@ -55,7 +55,7 @@ public class PlayerChatGame implements Listener {
         if (!arenaOptions.getBoolean("ModifiedChat.Match.Enabled")) {
             return;
         }
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
         if (match.getSpectators().contains(p)) {

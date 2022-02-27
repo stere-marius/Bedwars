@@ -19,7 +19,7 @@ public class WaitingBlockEvent implements Listener {
         if (match == null) {
             return;
         }
-        if (match.getMatchState() != MatchState.IN_WAITING) {
+        if (match.getMatchState() != MatchState.WAITING) {
             return;
         }
 
@@ -34,7 +34,7 @@ public class WaitingBlockEvent implements Listener {
         if (match == null) {
             return;
         }
-        if (match.getMatchState() != MatchState.IN_WAITING) {
+        if (match.getMatchState() != MatchState.WAITING) {
             return;
         }
 

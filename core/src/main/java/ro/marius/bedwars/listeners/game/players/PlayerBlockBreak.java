@@ -44,7 +44,7 @@ public class PlayerBlockBreak implements Listener {
             boolean hasMetadata = b.hasMetadata("TeamBed");
             boolean isInside = game.getGameCuboid().isInsideCuboidSelection(loc);
             boolean isNotOP = !p.isOp();
-            boolean isGame = game.getMatch().getMatchState() != MatchState.IN_WAITING;
+            boolean isGame = game.getMatch().getMatchState() != MatchState.WAITING;
 
             e.setCancelled(hasMetadata && isInside && isNotOP && isGame);
 

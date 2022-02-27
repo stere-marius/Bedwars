@@ -32,7 +32,7 @@ public class IceFishEvent implements Listener {
         Silverfish silverFish = (Silverfish) e.getEntity();
         AMatch match = (AMatch) silverFish.getMetadata("Match").get(0).value();
 
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
 

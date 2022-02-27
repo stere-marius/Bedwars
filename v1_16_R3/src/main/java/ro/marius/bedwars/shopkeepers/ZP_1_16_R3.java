@@ -15,7 +15,7 @@ import java.util.Set;
 public class ZP_1_16_R3 extends EntityPigZombie implements IShopKeepers {
 
 
-    public ZP_1_16_R3(EntityTypes<? extends EntityPigZombie> type, World world) {
+    public ZP_1_16_R3(World world) {
         super(EntityTypes.ZOMBIFIED_PIGLIN, world);
         Set<?> goalB = (LinkedHashSet<?>) ReflectionUtils.getPrivateField("d", PathfinderGoalSelector.class, this.goalSelector);
         goalB.clear();

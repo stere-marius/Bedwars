@@ -31,7 +31,7 @@ public class IronGolemEvent implements Listener {
         IronGolem golem = (IronGolem) entity;
         AMatch match = (AMatch) golem.getMetadata("Match").get(0).value();
 
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
 

@@ -91,7 +91,7 @@ public class Game {
     }
 
     public String getMod() {
-        return (this.getMatch().getMatchState() == MatchState.IN_WAITING)
+        return (this.getMatch().getMatchState() == MatchState.WAITING)
                 ? Utils.translate(this.getArenaOptions().getString("ArenaSign.InWaitingDisplay"))
                 : Utils.translate(this.getArenaOptions().getString("ArenaSign.InGameDisplay"));
 

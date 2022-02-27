@@ -47,7 +47,7 @@ public class WorldReset implements ArenaReset {
                             team.getUpgradeLocation().reloadLocation();
                         }
 
-                        match.setMatchState(MatchState.IN_WAITING);
+                        match.setMatchState(MatchState.WAITING);
 
                     }
                 }.runTaskLater(BedWarsPlugin.getInstance(), 1);

@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import ro.marius.bedwars.BedWarsPlugin;
 import ro.marius.bedwars.manager.ManagerHandler;
 import ro.marius.bedwars.match.AMatch;
@@ -25,7 +23,7 @@ public class PlayerPlaceBucket implements Listener {
         if (match == null) {
             return;
         }
-        if (match.getMatchState() == MatchState.IN_WAITING) {
+        if (match.getMatchState() == MatchState.WAITING) {
             return;
         }
 

@@ -18,6 +18,8 @@ public class GUIStructure {
     private final static File FILE = new File(BedWarsPlugin.getInstance().getDataFolder(), "menus.yml");
     private static YamlConfiguration config = YamlConfiguration.loadConfiguration(FILE);
 
+    // o clasa care are ConfiguredGuiDAO
+
     public static void loadConfiguration() {
 
         String arenaMenuPath = "Menu.ArenaInventory";
